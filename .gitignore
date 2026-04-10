@@ -1,0 +1,21 @@
+# Python environment
+.venv/
+__pycache__/
+*.pyc
+
+# Temp / caches
+.tmp/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local installers / bootstrap scripts
+python-*.exe
+get-pip.py
+
+# Research source PDFs
+papers/**/*.pdf
+
+# OS noise
+.DS_Store
+Thumbs.db
