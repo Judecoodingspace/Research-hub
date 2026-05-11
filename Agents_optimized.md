@@ -51,6 +51,20 @@
 - 一般性的模型切分 / 协同推理
 - 一般性的强化学习调度
 
+### 主线详细文档（必读）
+
+当前论文的完整主线梳理见 `paper3_main_thread.md`。
+生成任何 papercard、compare、gap_map 前，必须已读取该文档。
+
+该文档包含以下可对照细节：
+- 场景参数：多 UAV、A2A 链路、Jetson Orin 部署、VisDrone + DroneVehicle 双域
+- 三层架构：后端融合验证 → Pair 选择器 → 图像级触发预测器
+- 效用公式：`utility = predicted_delta_quality − λ_latency×latency − λ_payload×payload − precision_penalty`
+- 特征设计：V (17维像素统计) / D (~45维检测框统计) / H (~1870维 YOLO latent)
+- 关键发现：V+Ridge 优于 deep features；B3 在外部域被正确抑制；排队延迟可压倒链路质量
+
+对照其他论文时，优先从上述细节中寻找验证、挑战或补强线索。
+
 ---
 
 ## 核心工作原则
@@ -227,6 +241,21 @@
 - 若正文提取失败，必须明确说明“分析主要基于 metadata / notes”，不得伪装成全文精读。
 - 若 PDF 可读，但图表 / 表格 / 附录明显影响结论，应明确指出正文提取的边界。
 
+### 场景-实验双重合理化（重要补充规则）
+精读论文时，除以下提炼条目外，必须同步执行 `Agents.md` 中第 11 项 "Scenario-Experiment Justification（场景-实验双重合理化）" 分析。核心目标：从他人论文中提取"场景约束→技术需求→算法选择→实验验证"的完整因果链，反哺自身论文的防御性写作，回应审稿人对"技术堆砌"的质疑。
+
+### 精读对照检查清单（每次生成 papercard 前执行）
+
+- [ ] 已读取 `paper3_main_thread.md`
+- [ ] 被分析论文的**场景**与当前论文是否可比？（多 UAV？带宽受限？边缘部署？）
+- [ ] 被分析论文的**效用函数/目标函数**与当前论文的 utility formula 有何异同？
+- [ ] 被分析论文的**特征设计**是否支持 V-feature 的极简路线？或提供了更优替代？
+- [ ] 被分析论文的**实验矩阵**是否覆盖当前论文未探索的维度（退化类型/指标/budget/baseline）？
+- [ ] 被分析论文是否提供了可用的**消融策略**或**"why not simpler"论证**？
+- [ ] 被分析论文是否包含可支撑当前论文**防御性写作**的外部证据？
+- [ ] 被分析论文是否暴露了当前论文的**薄弱环节**（如 one-step selector 过于简单、线性效用不适应硬 deadline、缺少 sequential control？）——参见 Agents.md Critical Self-Review Rule
+- [ ] 对照结果是否已写入 papercard 对应条目（§2/§3/§5/§7/§8/§10/§11）？
+
 ### 每篇精读论文统一提炼以下内容：
 
 #### 1. Problem
@@ -286,6 +315,7 @@
 - 是否缺少与真实部署有关的验证
 - 是否分析不同工况下的 operating region
 - 是否区分 seen-regime 与 unseen-regime
+- 是否包含消融实验以证明各组件必要性（参见 Agents.md 第 11 项场景-实验双重合理化）
 
 #### 6. Strength
 论文最值得借鉴的地方是什么？
@@ -301,6 +331,7 @@
 - 只考虑单模态，缺少任务语义融合
 - 只在理想条件下成立，难以部署
 - 方法复杂但实验支撑不足
+- 算法/模型选择缺乏场景必要性论证，存在技术堆砌嫌疑（参见 Agents.md 第 11 项）
 - 没有 trigger / reject 机制
 - 没有多动作选择，只是 always-on 模块
 - 严重依赖 oracle label / seen regime
