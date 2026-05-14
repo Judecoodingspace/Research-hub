@@ -3,6 +3,7 @@
 ## 使用说明
 - 本文件用于跨主题追踪 `compare/` 下的横向比较结果。
 - 比较文件应围绕当前研究主线提炼差异、共性缺口与可复用内容，不堆叠摘要。
+- 比较时使用的专属维度来自 `paper_specs/<paper_id>/spec.md`。
 
 ## 主题索引
 
@@ -14,6 +15,11 @@
 | UAV-Resouce-Alloaction | `compare/UAV-Resouce-Alloaction/overview.md` | 多 UAV 资源分配与轨迹优化比较 | 已有 |
 | UAV-High-Overlap-Impact | `compare/UAV-High-Overlap-Impact/20260508_han_mc_dsa_impact_on_my_idea.md` | 高重合度文献对当前 conditional semantic collaboration / multi-action selector idea 的冲击评估 | 已生成 |
 | UAV-Task-Oriented-Communication | `compare/UAV-Task-Oriented-Communication/overview.md` | 三篇任务导向语义通信论文横向比较：块选择→个性化语义→多UAV多模态资源分配演进及其与当前论文的对照 | 已生成 |
+| CVN-DSA | `compare/CVN-DSA/overview.md` | 认知车联网频谱接入算法横向比较，支撑审稿意见回复 | 目录已建立，待填充 |
+
+## CVN-DSA 相关衍生成果
+- 研究空白与定位：`gap_map/CVN-DSA/cvn_dsa_gap_and_positioning.md`（待填充）
+- 审稿意见管理：`rebuttal/cvn-dsa/`（reviewer_comments / revision_plan / lit_support_matrix）
 
 ## UAV-Fire-Detection 相关衍生成果
 - 研究空白与定位：`gap_map/UAV-Fire-Detection/project_gap_and_positioning.md`

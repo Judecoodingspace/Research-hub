@@ -4,6 +4,7 @@
 - 本文件用于跨主题追踪已生成的 paper card。
 - 各主题内部仍以 `papercard/<topic>/index.md` 为主索引。
 - 原始 PDF 与 metadata 不在本文件中修改。
+- **论文专属分析标准**见 `paper_specs/index.md`——精读前必须查阅对应论文的 spec。
 
 ## 主题索引
 
@@ -16,6 +17,10 @@
 | UAV-LLM | UAV 多模态推理、大模型评测与语义判断 | `papercard/UAV-LLM/index.md` | 已有 |
 | UAV-Resouce-Alloaction | 多 UAV 资源分配、轨迹优化、协同卸载 | `papercard/UAV-Resouce-Alloaction/index.md` | 已有 |
 | UAV-Task-Oriented-Communication | UAV 任务导向语义通信：从单机语义块选择→个性化语义编码→多UAV多模态协同资源分配 | `papercard/UAV-Task-Oriented-Communication/index.md` | 已生成 3 篇 paper card |
+| CVN-DSA | 认知车联网动态频谱接入算法，退稿重投中，需系统文献对比支撑审稿回复 | `papercard/CVN-DSA/index.md` | 目录已建立，待填充 |
+
+## CVN-DSA 本轮新增
+- `papercard/CVN-DSA/Liu2024_Joint_Collaborative_Big_Spectrum_Data_Sensing_RL_DSA.md`
 
 ## UAV-Fire-Detection 本轮新增
 - `papercard/UAV-Fire-Detection/2026_Li_TSPF_UAV_Swarm_Forest_Fire_Detection.md`

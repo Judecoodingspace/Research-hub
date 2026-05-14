@@ -1,0 +1,521 @@
+\documentclass[journal]{IEEEtran}
+\usepackage{amsmath,amsfonts}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+\usepackage{array}
+\usepackage[caption=false,font=normalsize,labelfont=sf,textfont=sf]{subfig}
+\usepackage{textcomp}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{verbatim}
+\usepackage{graphicx}
+\graphicspath{{figures/pdf/}}
+\usepackage{emf}
+\usepackage{cite}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{textcase}
+\usepackage[colorlinks,linkcolor=blue,anchorcolor=black,citecolor=blue]{hyperref}
+\hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
+
+\begin{document}
+\title{A High-Quality ESN-DDQN-Based Adaptive Access Algorithm for Cognitive Vehicular Networks}
+\author{Zumin Yang,~\IEEEmembership{Student Member,~IEEE,}
+        Guoquan Li,~\IEEEmembership{Senior Member,~IEEE,}
+        Ruiheng Wu,~\IEEEmembership{Senior Member,~IEEE}
+        Jinzhao Lin,
+        and Yu Pang
+\thanks{This work was supported in part by the National Natural Science Foundation of China under Grant U21A20447 and Grant 12411530119, in part by the Chongqing Natural Science Foundation under Grant CSTB2022NSCQ-LZX0069, and in part by the Chengdu Science and Technology Program under Grant 2025-YF11-00077-HZ.}
+\thanks{Zumin Yang, Guoquan Li, Jinzhao Lin and Yu Pang are with the School of Communications and Information Engineering, Chongqing University of Posts and Telecommunications, Chongqing 400065, China (e-mail: d250101046@stu.cqupt.edu.cn; ligq@cqupt.edu.cn; linjz@cqupt.edu.cn; pangyu@cqupt.edu.cn).}
+\thanks{Ruiheng Wu is with the Department of Electronic and Electrical Engineering, Brunel University London, London UB8 3PH, UK (e-mail: ruiheng.wu@brunel.ac.uk).}}
+\markboth{IEEE TRANSACTIONS ON VEHICULAR TECHNOLOGY}%
+{Shell \MakeLowercase{\textit{et al.}}: A Sample Article Using IEEEtran.cls for IEEE Journals}
+\maketitle
+\begin{abstract}
+    Dynamic spectrum access (DSA) is regarded as a key technology to address spectrum scarcity for vehicular terminals (VTs) in cognitive vehicular networks (CVNs). However, VTs face two major challenges. First, access decisions based solely on channel availability are unreliable, since idle channels may still exhibit poor quality, while sensing uncertainty and primary user (PU) returns can trigger collisions and interruptions. Second, adaptive access in high-mobility CVNs requires learning mode-switching policies over high-dimensional continuous states with temporal dependencies, where standard recurrent deep Q-networks often converge too slowly. To address these challenges, we propose a multi-stage framework. First, we leverage a Transformer-based channel quality evaluation model for quality-aware channel selection. We then employ an attention-enhanced long short-term memory (LSTM) prediction model to estimate short-horizon channel occupancy. Finally, we develop an echo state network (ESN) assisted Double Deep Q-learning (DDQN) algorithm guided by a differentiated reward design that explicitly models the distinct objectives of overlay and underlay access, enabling fast-converging and adaptive mode switching. Extensive experiments demonstrate that the proposed strategy achieves lower packet loss rate (PLR) and higher VT throughput while maintaining high PU throughput comparable to non-interfering baselines.
+\end{abstract}
+
+\begin{IEEEkeywords}
+	Cognitive vehicular networks (CVNs), dynamic spectrum access (DSA), channel quality evaluation model, prediction model, echo state network (ESN).
+\end{IEEEkeywords}
+\section{INTRODUCTION}
+\IEEEPARstart {W} {ith} the rapid advancement of intelligent transportation and autonomous driving technologies, vehicular networks and their representative applications (e.g., autonomous driving, in-vehicle entertainment, collision avoidance) have become increasingly prevalent. These applications demand reliable and high-capacity wireless communication, leading to a dramatic surge in spectrum demand \cite{ref1}. Regulatory bodies worldwide have allocated dedicated spectrum bands for vehicular wireless access systems, requiring all vehicular terminals (VTs) to compete for channel access within such limited bands to transmit both safety-related and non-safety information \cite{ref2}, \cite{ref3}. However, these dedicated spectrum resources have quickly become insufficient amid the growing demand for high-bandwidth transmission, and their inherent limitations can hardly satisfy the diverse Quality of Service (QoS) requirements of different Internet of Vehicular (IoV) applications. These challenges underscore the urgent need for more efficient spectrum management technologies \cite{ref4}.
+\par
+To address spectrum scarcity, cognitive radio networks (CRNs) have emerged as a promising solution \cite{ref5}, enabling unlicensed secondary users (SUs) to opportunistically access spectrum licensed to primary users (PUs). By integrating cognitive radio technology into vehicular networks, cognitive vehicular networks (CVNs) are formed \cite{ref6}, where VTs act as SUs and traditional spectrum license holders serve as PUs. In such networks, dynamic spectrum access (DSA) is the key mechanism that enables VTs to opportunistically utilize licensed spectrum while limiting interference to PUs \cite{ref7}. In general, DSA in CVNs can be realized through two mainstream access modes: overlay access, in which VTs transmit only when the licensed channel is detected to be idle \cite{ref8}, and underlay access, in which spectrum sharing is allowed as long as the interference imposed on PUs remains below a tolerable threshold \cite{ref9}.
+\par
+However, conventional overlay and underlay access remain imperfect in practical CVNs. Overlay access is highly sensitive to sensing uncertainty and PU reappearances, which can induce frequent interruptions and switching overhead, degrading VT's QoS \cite{ref10}. Underlay access, on the other hand, relies on timely channel state information (CSI) of the SU--PU link for interference-aware power control, which is difficult to acquire in high-mobility distributed settings and may incur considerable signaling overhead; moreover, stringent power constraints can further limit achievable rate and coverage \cite{ref11}. Overall, neither paradigm alone is consistently reliable and efficient, motivating more adaptive DSA designs that can better cope with sensing uncertainty and channel dynamics. Beyond these conventional paradigms, advanced schemes have been explored, such as cooperative relaying with game-theoretic negotiation \cite{ref12}, priority-aware hybrid access \cite{ref13}, and signal design for full-duplex underlay coexistence \cite{ref14}.\par
+In DSA for CVNs, access decisions based solely on binary availability can be unreliable, since available channels may differ substantially in quality and stability. Existing pre-access attempts therefore enrich decision inputs by considering stability scoring and usage-pattern modeling \cite{ref15, ref16}, or by incorporating multiple spectrum states such as abnormal sensing outcomes, packet transmission status, and scheduling priorities \cite{ref17}. However, these indicators are often derived from instantaneous observations and remain vulnerable to sensing uncertainty, while a VT typically requires a non-negligible transmission duration after access—making near-future availability crucial for sustaining QoS. To capture temporal dynamics, prediction-aided designs have been explored using Long short-Term Memory (LSTM) based occupancy forecasting to guide learning-based access \cite{ref18}. Nevertheless, current efforts still fall short of a unified, QoS-oriented pre-access perception: occupancy prediction alone ignores channel-quality cues that determine whether an idle channel is actually usable. Motivated by these gaps, we develop a quality-aware and predictive pre-access perception module that jointly evaluates multi-dimensional channel quality and anticipates near-future availability.\par
+
+Although RL-based DSA offers strong adaptability, its effectiveness in high-mobility CVNs is still limited by slow policy convergence under rapidly varying channel conditions. To alleviate this issue, ESN-enhanced Q-learning variants have been explored in related cognitive-radio scenarios \cite{ref19}. However, these methods are not specifically designed for CVNs and usually rely on coarse access indicators, such as spectrum occupancy or interference levels, while overlooking multi-dimensional channel quality that directly affects VT‘s QoS. In parallel, reward design has also been studied to regulate agent behaviors in vehicular environments \cite{ref20}; however, existing formulations rarely distinguish between overlay and underlay access paradigms or explicitly support adaptive mode switching. These limitations motivate the development of a convergence-efficient ESN-DDQN learning framework with a differentiated reward mechanism for adaptive overlay/underlay access.\par
+To address the lack of comprehensive pre-access quality assessment and the slow convergence of existing RL-based DSA schemes in CVNs, we propose an integrated framework that jointly exploits spectrum quality evaluation, channel-state prediction, and efficient policy learning for adaptive access control. Specifically, the proposed framework combines dynamic quality-aware perception with predictive channel awareness to construct an informative state representation, based on which an ESN-DDQN agent learns adaptive overlay/underlay access policies. In this way, the proposed method improves access adaptability in highly dynamic vehicular environments while balancing VTs’ QoS requirements and PU protection. The main contributions of this paper are summarized as follows:
+\begin{enumerate}[label=\arabic*)]
+\item \textit{Comprehensive Quality Assessment and State Prediction:} We leverage the self-attention mechanism in the Transformer encoder to fuse multiple spectrum parameters and compute a comprehensive dynamic quality index (DQI). Combined with outputs from a dedicated deep learning-based spectrum prediction model, this DQI forms a high-dimensional, continuous state representation. This approach addresses prior limitations by evaluating both spectrum occupancy and quality, while mitigating errors caused by imperfect, instantaneous sensing.
+\item \textit{Fast-Converging ESN-DDQN for Adaptive Access:} The rich state representation is fed into a novel ESN-DDQN network, which is specifically designed to handle complex temporal dependencies and achieve extremely fast convergence, avoiding the low efficiency of standard recurrent deep Q-Network (DQN). Guided by a differentiated reward function that explicitly models the distinct goals of overlay and underlay access, the agent learns an optimal policy to adaptively switch between access modes, thereby maximizing VTs’ QoS and protecting PUs from harmful interference.
+\item\textit{Robust Performance Under Spectrum Scarcity and Abundance:} We evaluate the proposed ESN-DDQN-based adaptive access strategy in both spectrum-scarce and spectrum-abundant environments, where the Full Model consistently outperforms Fixed Overlay Access and Fixed Underlay Access in terms of lower PLR and higher VT throughput while preserving PU throughput. Ablation studies show that removing either the prediction module or the DQI-based quality assessment module degrades performance, confirming that prediction-aided interruption avoidance and quality-aware channel selection are both essential.
+\end{enumerate}
+\par The notations used in this paper are listed in Table \ref{tab:notations}. The rest of this paper is organized as follows. Section II reviews the related work. Section III describes the system model, which includes the channel quality evaluation model and the channel state prediction model. Section IV presents the ESN-DDQN-based adaptive access decision and policy learning method, including the design of states, actions, and rewards. Simulation results are discussed in Section V. Section VI concludes the paper.
+\begin{table}[t]
+\centering
+\caption{Summary of Notations Used in This Paper}
+\label{tab:notations}
+\renewcommand{\arraystretch}{1.1}
+\setlength{\tabcolsep}{6pt}
+\begin{tabular}{|p{0.28\columnwidth}|p{0.66\columnwidth}|}
+\hline
+\textbf{Notation} & \textbf{Definition} \\ \hline
+$M$ & Number of channels. \\ \hline
+$N$ & Number of VTs \\ \hline
+$t$ & Slot (time) index \\ \hline
+$\Delta t$ & Slot duration \\ \hline
+$\delta_t^{i,j}$ & Sensing outcome of VT $i$ on channel $j$ at slot $t$. \\ \hline
+$\Phi_t^{\prime j}$ & Dynamic quality index (DQI) of channel $j$ at slot $t$. \\ \hline
+$\theta_t^{j}$ & Predicted idle probability of channel $j$ at slot $t$. \\ \hline
+$T_{upd}$ & Update interval\\ \hline
+$T_{stat}$ & Validity time of the statistical descriptors.\\ \hline
+$\gamma_t^{j}$  & SNR indicator for channel $j$ at slot $t$.\\ \hline
+$h_t^{j}$    &Channel power gain of channel $j$ at slot $t$.\\ \hline
+$P_t^{j}$    &Nominal transmit power of channel $j$ at slot $t$ .\\ \hline
+$\mu_0$      &Noise power spectral density\\ \hline
+$B_t^{j}$    &Bandwidth of channel $j$  \\ \hline
+$\xi_t^{j}$  &Received signal strength (RSS) indicator for channel $j$ at slot $t$.\\ \hline
+$PL_t^{j}$   &Large-scale path loss of channel $j$ at slot $t$. \\ \hline
+$g_t^{j}$    &Shadowing and/or small-scale fading effects\\ \hline
+$\mathrm{high}(f_t^{j})$ & Upper frequency limit of channel $j$ at slot $t$.\\ \hline
+$\mathrm{low}(f_t^{j})$ & Lower frequency limit of channel $j$ at slot $t$.\\ \hline
+$\mathbf{X}_t^{j}$    & Historical feature sequence \\ \hline
+$\mathbf{U}$          & Quality data matrix  \\ \hline
+$\mathbf{W_L}$       & Learnable embedding matrix  \\ \hline
+$\mathbf{\overline U}$ &  Positional encoding matrix          \\ \hline
+$\mathbf{\tilde{U}_p}$  & Positional relationships matrix  \\ \hline
+$\mathbf{Q}$            & Query matrix \\ \hline
+$\mathbf{K}$         & Key matrix \\ \hline
+$\mathbf{V}$     & Value matrix \\ \hline
+$\mathbf{b_0}$   & Bias matrix \\ \hline
+$\mathbf{Y}_{t-T:t-2}$ & Prediction test window \\ \hline
+$\mathbf{S_t^{i}}$    & State space of VT $i$ at slot $t$. \\ \hline
+$\Theta^{i,j}$       & Attention weight between channel $i$ and channel $j$.  \\ \hline
+$z^{i,j}$             &Attention weight \\ \hline
+$S_t$ & State space at slot $t$\\ \hline
+$\mathbf{A_t}$ & Action space  at slot $t$\\ \hline
+$\Omega _t^{i,j}$  &  Interference caused by VT $i$ to the PU or to other VT at time $t$. \\ \hline
+$C_t^{i,j}$ &Throughput obtained by VT $i$ after accessing channel $j$.\\ \hline
+$\Psi _t^{j, {\rm{PU}}}$ &Power/interference tolerance threshold of PU on
+channel $j$ at time $t$. \\ \hline
+ $\Gamma$  & Quality emphasis exponent \\ \hline
+ $\vartheta$ &Network weight \\ \hline
+ $\partial$  &Negative penalty factor\\ \hline
+ $\mathcal{R}$ & reservoir size\\ \hline
+ $\mathcal{E}$ &training episodes\\ \hline
+ $\mathcal{B}$ &minibatch size\\ \hline
+\end{tabular}
+\end{table}
+\section{RELATED WORK}
+In this section, we categorize existing DSA studies according to their spectrum modeling and decision-making paradigms into three mainstream categories.
+These include: 1)  Markov decision process (MDP) based methods that model DSA as a stochastic sequential decision problem; 2) Game theory-based approaches that formulate DSA as a strategic competition problem among users; 3) RL-based schemes that achieve adaptive DSA through environment interaction without relying on complete prior knowledge. We then review representative works in each category; their core ideas and inherent limitations are summarized in Table \ref{tab:related_work}.\par
+\subsection{Markov Decision Models for DSA}
+Markov processes, a mathematical model for studying stochastic state transitions, were first widely applied in fields such as queueing theory \cite{ref21}. Due to its excellent performance in handling uncertainty and describing dynamic system evolution, this method has been applied in spectrum access scenarios. Researchers typically utilize Markov processes to model the random variations of channel states or the dynamic behavior of user access, or to formulate the spectrum decision problem as a MDP. MDP-based models have been used to analyze hybrid spectrum access with user priorities and QoS constraints in CRNs \cite{ref22}. Semi-Markov Decision Process (SMDP) have also been adopted for channel allocation in CVNs to optimize long-term reward under QoS/PU constraints \cite{ref23}. For imperfect sensing, partially observable Markov decision process (POMDP)-based formulations have been explored with auxiliary state-estimation techniques to support access decisions \cite{ref24}. Despite their value in sequential decision modeling, these Markov-based approaches often assume stationary dynamics and known transition statistics, which can be difficult to maintain in high-mobility CVNs with rapidly varying channels. Moreover, they do not naturally scale to high-dimensional continuous state representations constructed from multi-dimensional spectrum parameters. These limitations motivate learning-based DSA designs that can adapt online while leveraging richer spectrum descriptors.\par
+\subsection{Game-Theoretic Formulations for DSA}
+Game-theoretic formulations constitute another mainstream paradigm for DSA, offering principled tools for spectrum allocation and strategic interactions among users. Early studies employed nash-equilibrium-based games for spectrum allocation under resource constraints (e.g., energy-aware designs) \cite{ref25}. Stackelberg-game-based frameworks have also been explored to model spectrum leasing and hierarchical interactions between PUs and SUs in dynamic settings \cite{ref26}. Evolutionary/graphical games have been adopted to capture distributed user interactions and enable low-complexity spectrum access with equilibrium-seeking dynamics \cite{ref27}. Despite their effectiveness in modeling strategic behaviors, many game-theoretic DSA approaches assume fully rational users and equilibrium convergence under relatively slow dynamics, which can be restrictive in high-mobility CVNs. Moreover, achieving QoS–interference trade-offs typically requires fast adaptation to rapidly varying channel conditions, whereas equilibrium-based designs may incur non-negligible convergence overhead or rely on simplified state information. These limitations motivate learning-based DSA designs that can adapt online and explicitly encode overlay/underlay objectives in the decision criterion.
+\par
+\subsection{Learning-Based DSA via Reinforcement Learning}
+RL has become a prevalent model-free paradigm for DSA\cite{ref28}, enabling adaptive decision-making via agent–environment interactions in dynamic vehicular scenarios. Accordingly, RL-based DSA has been widely investigated in CVNs \cite{ref29}. Early works applied tabular Q-learning for DSA under PU-protection constraints and sensing uncertainty \cite{ref30}. Deep reinforcement learning (DRL) variants have incorporated function approximation and auxiliary models  to enhance state inference and access efficiency \cite{ref31}. Recurrent DRL architectures  have also been explored to cope with partial observability and imperfect feedback in vehicular settings \cite{ref32}. Despite these advances, many RL-based DSA designs either rely on conventional learners or lightweight model combinations, and often use limited spectrum descriptors. Consequently, they may converge slowly and struggle to scale to high-dimensional continuous state representations that jointly capture multi-dimensional spectrum quality in high-mobility CVNs.\par
+In summary, existing DSA approaches have provided useful solutions from the perspectives of Markov model-based optimization, game-theoretic interaction, and RL. However, these methods still face two major limitations in highly dynamic CVNs. First, many existing schemes rely on simplified channel representations, mainly focusing on spectrum occupancy while overlooking comprehensive quality differences among candidate channels. Second, although RL-based methods offer strong adaptability, they often suffer from slow convergence and limited learning efficiency in fast-varying vehicular environments. To address these issues, this paper develops a quality and prediction-aware adaptive access framework, which jointly considers comprehensive channel assessment, channel-state prediction, and efficient policy learning for dynamic overlay/underlay spectrum access.
+\begin{table*}[t!] 
+\centering
+\caption{Related Work of DSA}
+\label{tab:related_work}
+\begin{tabularx}{\textwidth}{| >{\raggedright}p{4.5cm} | *{3}{>{\raggedright\arraybackslash}X |}}
+\hline 
+\textbf{Methodology} & \textbf{Key Features} & \textbf{Strengths} & \textbf{Weaknesses} \\
+\hline 
+\textbf{Markov Decision Process:} MDP [22], SMDP [23], POMDP [25].
+& Models sequential decision-making using state transitions and rewards.
+& Finds theoretically optimal long-term policies in known environments.
+& Requires accurate system model, scales poorly with state size.\\
+\hline 
+\textbf{Game Theory:} Classical Game Theory [25], Stackelberg model [26], Evolutionary game [27].
+& Models multi-player interactions; users decide independently based on payoffs.
+& Suitable for distributed systems, enables independent decisions and fairness.
+&Requires global information, Nash Equilibrium may be sub-optimal.\\
+\hline 
+\textbf{Reinforcement learning :} Q-Learning [30], DQN-Graph Neural Network (GNN) [31], DQN [32].
+& Learns optimal policies through environmental interaction and maximizing cumulative rewards.
+& Highly adaptive to dynamic environments, optimizes long-term performance
+&Slow convergence, data-hungry, and faces the exploration-exploitation trade-off. \\
+\hline 
+\end{tabularx}
+\end{table*}
+\section{SYSTEM MODEL}
+This section presents the system model for pre-access perception, including channel quality evaluation and channel state prediction. We assume that each base station (BS) is able to obtain historical data for all channels in the spectrum resources. To leverage data-driven models without overburdening resource-constrained VTs, we adopt a processing architecture where complex computations are offloaded to a central server, as illustrated in Fig. \ref{fig1}. This architecture is based on decoupling information by its rate of change into two categories:
+\begin{itemize}
+    \item \textbf{Short-Term information:} The real-time sensed state $\delta_t$, which is handled locally by the VT.
+    \item \textbf{Long-term statistical information:} The DQI $\Phi'$ and Prediction $\theta$, which are offloaded to the server.
+\end{itemize}
+\par
+We adopt a slotted-time model with slot duration $\Delta t$. In each slot, PU activity and channel conditions are assumed quasi-static; each VT performs spectrum sensing, selects an access action, and attempts transmission. The resulting acknowledgment/negative acknowledgment (ACK/NACK) is observed at the end of the slot and used for learning and performance evaluation. Each BS is connected to a central server and periodically uploads historical channel-parameter measurements. With sufficient computational resources, the server runs the spectrum-quality evaluation and channel-state prediction algorithms. These models do not require millisecond-scale instantaneous CSI; instead, they infer semi-static quality indicators and occupancy patterns from historical data. The resulting statistical descriptors vary slowly and thus remain valid over multiple decision slots. The server returns the assessment and prediction outputs to the BS for dissemination to VTs.
+\par
+To limit dissemination overhead, each BS processes the server outputs and broadcasts a compact summary to nearby VTs. The overhead is low because the payload contains only per-channel summary indicators (e.g., quantized DQI and predicted occupancy probability). The summary is broadcast periodically with update interval $T_{\mathrm{upd}}$, chosen such that $T_{\mathrm{upd}}<T_{\mathrm{stat}}$, where $T_{\mathrm{stat}}$ denotes the validity time of the statistical descriptors. At each decision epoch, each VT selects at most one channel for access. Using the received summary, each VT performs lightweight inference with the ESN-DDQN policy to select its access action. Overall, offloading DQI evaluation and channel prediction to the server keeps the VT-side computation lightweight while enabling adaptive access decisions.
+\par
+In this paper, signal-to-noise ratio (SNR), received signal strength (RSS), and bandwidth are employed as three metrics for characterizing spectrum quality. For each channel $j\in\{1,2,\ldots,M\}$ at slot $t$, the BS (or the infrastructure) maintains a channel-level descriptor vector
+$\mathbf{x}_t^{j}=[\gamma_t^{j},\,\xi_t^{j},\,B_t^{j}]$, which represents the quality information of channel 
+$j$ at time slot $t$, obtained from the current sensing outcome and the associated measurement data.
+
+The SNR indicator for channel $j$ at slot $t$ is given by
+\begin{equation}
+\label{eq:snr}
+\gamma_t^{j}=\frac{P_t^{j}|h_t^{j}|^2}{\mu_0 B_t^{j}},
+\end{equation}
+where $P_t^{j}$ denotes the nominal transmit power (or a reference power) associated with channel $j$, $|h_t^{j}|^2$ is the channel power gain estimated from measurements, and $\mu_0$ is the noise power spectral density.\par
+The RSS indicator for channel $j$ at slot $t$ is modeled as the received power (in dBm) and can be expressed as
+\begin{equation}
+\label{eq:rss}
+\xi_t^{j}=P_t^{j}-PL_t^{j}\mathrm+g_t^{j},
+\end{equation}
+where $P_t^{j}$ is the nominal transmit power on channel $j$, $PL_t^{j}$ denotes the large-scale path loss of channel $j$ at slot $t$, and $g_t^{j}$ captures shadowing and/or small-scale fading effects. 
+
+The bandwidth of channel $j$ is
+\begin{equation}
+B_t^{j}={\rm high}(f_t^{j})-{\rm low}(f_t^{j}),
+\end{equation}
+where ${\rm high}(f_t^{j})$ and ${\rm low}(f_t^{j})$ are the upper and lower frequency limits of channel $j$ at slot $t$, respectively.
+\begin{figure*}[!t]
+    \centering
+    \includegraphics[trim=0cm 0cm 0cm 0cm, clip, width=\textwidth]{Fig1.pdf}
+    \caption{System model}
+    \label{fig1} 
+\end{figure*}
+\subsection{Channel Quality Evaluation Model}
+% This section provides the pre-access perception pipeline that supplies reliable inputs for subsequent decision-making. Specifically, the channel quality evaluation model aggregates multi-dimensional spectrum parameters via a Transformer encoder and outputs a per-channel DQI to reflect instantaneous link quality. In parallel, the channel prediction model forecasts future channel states to capture temporal dynamics and alleviate sensing imperfections. Together, these two outputs constitute the pre-access perception results used by the learning-based access strategy introduced in the next section.\par
+To support reliable spectrum access decisions, it is not sufficient to consider only whether a channel is occupied or idle. In highly dynamic CVNs, the actual transmission quality of a candidate channel is also affected by multiple factors, such as RSS, SNR, and available bandwidth. Therefore, a channel quality evaluation model is introduced to jointly characterize these heterogeneous spectrum features and generate a comprehensive DQI for each channel. The resulting DQI provides a quantitative measure of instantaneous channel quality and serves as an important input for subsequent access decision-making.\par
+The specific results and process of the quality assessment model in this chapter are illustrated in Fig. \ref{fig2}. Through embedding matrices and positional encoding, the spectrum quality data is preprocessed, and the results are fed into the encoder layers of the Transformer. The data undergoes further processing through multiple linear output layers in the encoder, as well as self-attention computation to obtain the DQI of the channel, thereby completing the channel quality assessment. The DQI integrates the multi-parameter performance of various channels within the spectrum over a period of time, achieving cross-channel analysis and evaluation within the spectrum.
+% \subsection{Preprocessing and Positional Encoding}
+	\begin{enumerate}
+		\item Channel Quality Data Processing: For each channel $j$, we construct a historical feature sequence $\mathbf{X}_t^{j}=\{\mathbf{x}_{t-T+1}^{j},\ldots,\mathbf{x}_{t}^{j}\}$ as the input to the quality assessment model,where $T$ denotes the length of the observation window (in number of time slots). Each feature vector $\mathbf{x}_{t}^{j}$ collects the measured spectrum descriptors of channel $j$ at slot $t$, e.g., $\mathbf{x}_{t}^{j}=[\gamma_{t}^{j},\,\xi_{t}^{j},\,B_{t}^{j}]$. The BS periodically uploads these channel-level measurements to the server, which computes the DQI and disseminates it with update interval $T_{\mathrm{upd}}$.
+		\item Formation of Embedding Matrix: The quality data of all channels in the set $M$ over one period are assembled into a $M \times T$ matrix $\mathbf{U}$. To reduce computational complexity, a learnable embedding matrix $\mathbf{W_L}$ is applied to compress each channel's quality vector producing a new compact matrix $\mathbf{\overline U}$. Subsequent modules operate on this compressed representation to lower computational cost and model complexity. Matrix $\mathbf{\overline U}$  can be represented as
+		\begin{equation}
+			\mathbf{\overline U} = \mathbf{W_L} \mathbf{\cdot U}.
+			\label{eq:compression}
+		\end{equation}
+		\item Traditional Transformer encoders do not need to distinguish the positional relationships of input data, but channel quality data has strong temporal dependencies. Encoding the positional relationships of inputs reasonably is crucial for correctly evaluating channel quality. This chapter uses a trainable positional encoding matrix $\mathbf{\overline U}$, by adding a trainable matrix to the compressed matrix, to add positional relationships $\mathbf{\tilde{U}_p}$ to the channel quality data. The new matrix $\mathbf{\tilde{U}}$ can be represented as \begin{equation}
+			\mathbf{\tilde{U}} = \mathbf{\overline U} + \mathbf{\tilde{U}_p}.
+			\label{eq:position} 
+		\end{equation}
+		\par 
+		After compression and positional encoding are applied through equation \eqref{eq:compression} and equation \eqref{eq:position} respectively, matrix $ \mathbf{\tilde{U}}$ is passed into the Transformer encoder layers to extract both inter-channel and intra-channel quality features.
+	\end{enumerate}
+
+% \subsection{DQI Calculation}
+Treat each row of $ \mathbf{\tilde{U}}$ is $\tilde{u}_i$, which as a  channel quality vector of length $T$. Let matrix $ \mathbf{Q}$, $\mathbf{K}$, $\mathbf{V}$ store the 'query', 'key', and 'value' vectors of the self-attention mechanism \cite{ref33}. Matrix $\mathbf{W_q}$, $\mathbf{W_k}$, and $\mathbf{W_v}$ are the learnable weight matrices for the 'query', 'key', and 'value' vectors, matrix $\mathbf{Q}$, $\mathbf{K}$, $\mathbf{V}$ can be represented as 
+\begin{align}
+\mathbf{Q} &= \mathbf{\widetilde{U}}\mathbf{W_q} = [\widetilde{u}_1 \mathbf{W_q}, \widetilde{u}_2\mathbf{W_q}, \ldots, \widetilde{u}_M\mathbf{W_q}] = [q_1, q_2, \ldots, q_M],\notag\\
+\mathbf{K} &= \mathbf{\widetilde{U}}\mathbf{W_k} = [\widetilde{u}_1\mathbf{W_k}, \widetilde{u}_2\mathbf{W_k}, \ldots, \widetilde{u}_M\mathbf{W_k}] = [k_1, k_2, \ldots, k_M],\notag\\
+\mathbf{V} &=\mathbf{ \widetilde{U}}\mathbf{W_v} = [\widetilde{u}_1\mathbf{W_v}, \widetilde{u}_2\mathbf{W_v}, \ldots, \widetilde{u}_M\mathbf{W_v}] = [v_1, v_2, \ldots, v_M].
+\end{align}
+\par
+Multiply the query vector $q_i$ of channel $i$ with the key vector $k_j$ of channel $j$ to obtain the attention weight, which is expressed as
+\begin{equation}
+\Theta^{i,j} = \frac{1}{\sqrt{d_k}}q_i k_j^T = \frac{1}{\sqrt{d_k}}\widetilde{u_i}\mathbf{W_q }\mathbf{W_k^T}\widetilde{u_j}^T,
+\end{equation}
+where  $\Theta^{i,j}$ represents the attention weight between channel $i$ and channel $j$, Thus enabling the extraction of common features among different channel quality vectors.
+\par 
+ With the computed attention weights, we can further calculate the attention vectors $z^{i,j}$, which  can be represented as
+ \begin{equation}
+	z^{i,j} = \sum\limits_{j = 1}^{j=M} {{\Theta ^{i,j}}{v_j}},
+ \end{equation}
+ \par
+ Combine all channel attention vectors to form an attention matrix {$\mathbf{\overline Z }$}, and apply a learnable matrix $\mathbf{W_o}$ along with bias $\mathbf{b_o}$ to obtain matrix $\mathbf\Phi$, which can be represented as
+\begin{equation}
+\boldsymbol{\Phi}=\left[\Phi_1,\ldots,\Phi_M\right]=\mathbf{Z}\mathbf{W}_o+\mathbf{b}_o,
+\end{equation}
+Finally, the sigmoid function is applied to map $\Phi_j$ to the DQI of channel $j$, which can be represented as $\Phi_j'$.
+\begin{figure*} 
+    \centering
+    \includegraphics[width=\textwidth, clip]{Fig2.pdf}
+    \caption{A High-Quality ESN-DDQN-Based Adaptive Access Framework}
+    \label{fig2}
+\end{figure*}
+\subsection{Channel Prediction Model}
+Since instantaneous sensing may be imperfect and channel conditions in CVNs vary rapidly over time, relying solely on current observations may lead to unreliable access decisions. To enhance decision robustness, a channel prediction model is further introduced to estimate future channel states based on historical observations. By capturing the temporal evolution of channel availability, the prediction model provides forward-looking information that complements the  quality evaluation and helps the access strategy better adapt to highly dynamic vehicular environments.\par
+This paper exploits both inter-channel correlations and intra-channel temporal dependencies for multi-channel state probability prediction. LSTM is adopted as a backbone to capture temporal patterns in channel-state sequences; however, vanilla LSTM may be less effective for long sequences due to limited long-range dependency capture, and encoding all history into a fixed-size hidden state can create an information bottleneck. To address these issues, we introduce an attention mechanism to reweight time steps and emphasize the most informative observations. The attention module aggregates the sequence of hidden states into a context representation without forcing all information into a single fixed-length vector, thereby improving robustness by jointly capturing temporal patterns and inter-channel interactions.\par
+As shown in Fig.~\ref{fig2}, the prediction model takes the historical multi-channel state matrix over the past $T$ slots as input. Specifically, let $Y_{\tau}^{j}\in\{0,1,2\}$ denote the state of channel $j\in\{1,\ldots,M\}$ at slot $\tau$, where $0$, $1$, and $2$ represent idle, PU-occupied, and SU-occupied states, respectively. We adopt one-step-ahead training: the input window $\mathbf{Y}_{t-T:t-2}$ is used to predict the next-slot state $\mathbf{y}_{t-1}$. After training, the server feeds the latest window $\mathbf{Y}_{t-T+1:t-1}$ into the model to infer the idle-probability vector for slot $t$, denoted by $\boldsymbol{\theta}_t=[\theta_t^{1},\ldots,\theta_t^{M}]$, which is then disseminated to support access decision-making.
+\section{ESN-DDQN-BASED ADAPTIVE ACCESS DECISION AND POLICY LEARNING}
+In this section, we cast DSA as a RL problem and learn an adaptive policy using the proposed ESN-DDQN model. The VT, acting as the agent, observes a continuous state constructed from spectrum sensing results, the channel quality assessment output, and the predicted channel occupancy probability. At each decision epoch, the VT selects a channel (or remains idle) and an access mode (overlay/underlay) according to the learned policy. After executing the action and attempting transmission, it receives a scalar reward that reflects the chosen access mode, the assessed channel quality, and the predicted occupancys probability. The resulting experience tuple is stored and sampled to update the ESN-DDQN parameters, enabling the policy to be refined periodically to track time-varying wireless conditions.
+\subsection{State Space and Action Space Formulation}
+\noindent\textbf{State space:}
+The state space of at slot $t$ is defined by combining the instantaneous sensing outcome, the quality assessment, and the predicted occupancy information. Specifically, the state space is given by
+\begin{equation}
+\label{eq:state_space}
+\mathbf{S_t}=\left\{\delta_t,\,\Phi_t,\,\theta_t^{}\right\},
+\end{equation}
+where $\delta_t=[\delta_t^{i,1},\ldots,\delta_t^{i,M}]$ denotes the real-time sensed channel-occupancy vector at VT $i$, $\Phi_t^{\prime}=[\Phi_t^{\prime 1},\ldots,\Phi_t^{\prime M}]$ is the DQI vector disseminated by the BS/server, and $\theta_t=[\theta_t^{1},\ldots,\theta_t^{M}]$ is the predicted idle-probability vector for the $M$ channels. Including $\delta_t^{i}$ provides instantaneous evidence of current channel availability and helps mitigate prediction errors, while $\Phi_t^{\prime}$ and $\theta_t$ capture quality-aware and predictive information to support robust adaptive access decisions.
+\par
+\noindent\textbf{Action space:}
+In time slot $t$, the action space $A_t^N$ is expressed as:
+\begin{equation}
+\label{eq:action_space}
+\mathbf{A_t^i} = \{ a_t^{i.1},a_t^{i,2}\},
+\end{equation}
+Where $a_t^{i,1} \in \{0,1,\ldots,M\}$, $a_t^{i,1} = 0$ indicates that VT $i$ does not access any channel at time $t$, while $a_t^{i,1} = m$ indicates that VT $i$ accesses channel $m$ at time $t$. $a_t^{i,2} \in \{0,1\}$, $a_t^{N,2} = 0$ indicates that VT $i$ accesses channel $i$ with overlay mode. $a_t^{i,2} = 1$ indicates that VT $i$ accesses channel $i$ with underlay mode.
+\begin{figure*} 
+    \centering
+    \includegraphics[width=\textwidth,clip]{Fig3.pdf}
+    \caption{ESN-DDQN Architecture and Training Process}
+    \label{fig3}
+\end{figure*}
+\subsection{Differentiated Reward Function}
+\subsubsection{Overlay Access Reward}
+Under the overlay mode, VT $i$ can only use channels not occupied by the PU. When VT $i$ successfully accesses a channel at time $t$ using the overlay mode, it receives the following reward:
+\begin{equation}
+\label{eq:reward_definition_final} 
+\begin{split} 
+r_t^{i,j} &= \Phi_t^{'i,j}*C_t^{i,j}/C_{max}- \Omega_t^{i,j},\\
+\Phi_t^{'i,j} &= \begin{cases} 
+\Gamma, & \text{overlay access mode} \\
+\Phi_t^{'i,j},      & \text{underlay access mode}, 
+\end{cases}
+\end{split}
+\end{equation}
+where $\Omega _t^{i,j}$ denotes the interference caused by VT $i$ to the PU or to other vehicles at time $t$. $C_t^{i,j}$ denotes the throughput obtained by VT $i$ after accessing channel $j$. $\Phi_t^{\prime\, i,j}$ denotes the DQI of channel $j$ obtained by the VT from the BS at time $t$. $C_{max}$ represents the maximum throughput measured within a given time interval. $\Gamma$ is a quality emphasis exponent, This hyperparameter is used to scale the DQI, We set $\Gamma=2$ unless otherwise specified; $\Gamma\in\{1,2,3\}$ was tested, and $\Gamma=2$ provided the best trade-off between reliability and throughput. Under the overlay access mode, this hyperparameter amplifies the DQI to encourage the VT to access channels with a high DQI.
+\begin{enumerate}
+	\item if VT $i$ does not access  any channel at time $t$, then  no data transmission is completed by the VT. $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
+    \begin{equation}
+		\left\{ \begin{array}{l}C_t^{i,j} = 0,\\
+\Omega _t^{i,j} = 0.
+\end{array} \right.
+\label{eq:no_access}
+	\end{equation}
+	\item If VT $i$ accesses an idle channel $j$, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
+\begin{equation}
+\left\{ \begin{array}{l}
+C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t}}}),\\
+\Omega _t^{i,j} = 0,
+\end{array} \right.
+\label{eq:access_idle}
+\end{equation}
+where $B_t^{i,j}$ is the bandwidth of channel $j$ detected by VT $i$ at time $t$. $h_t^{i,j}$ is the channel gain of channel $j$ detected by VT $i$ at time $t$. $\mu_t$ is the noise power at time $t$. $P_t^{i,j}$ is the transmission power of channel $j$ detected by VT $i$ at time $t$.
+	\item Under overlay mode, selecting an occupied channel is allowed in the action space but
+	 will incur a penalty, encouraging the policy to avoid PU/SU collisions. 
+	 If VT $i$ accesses a channel $j$ occupied by PU, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
+	\begin{equation}
+\left\{ \begin{array}{l}
+C_t^{i,j} = 0,\\
+\Omega _t^{i,j} = \frac{{\partial |h_t^{i,{\rm{PU}}}{|^2}P_t^{i,j}}}{{\Psi _T^{j,{\rm{PU}}}}},
+\end{array} \right.
+	\end{equation}
+\par where $h_t^{i,{\rm{PU}}}$ is the channel gain between VT $i$ and PU at time $t$. $P_t^{i,j}$ is the transmission power of channel $j$ detected by VT $i$ at time $t$. $\partial$ is a negative penalty factor, which is used to penalize the interference caused by VT $i$ to PU when accessing a channel occupied by PU. $\Psi _t^{j, {\rm{PU}}}$ is the power/interference tolerance threshold of PU on channel $j$ at time $t$. 
+
+\item If VT $i$ accesses a channel that is occupied by another vehicle terminal $i'$. $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as 	
+\begin{equation}
+		\left\{ \begin{array}{l}
+C_t^{i,j} = 0,\\
+\Omega _t^{i,j} = \partial |h_t^{i,i'}{|^2}P_t^{i,j},
+\end{array} \right.
+\end{equation}
+ where $h_t^{i,i'}$ is the channel gain between VT $i$ and VT $i'$ at time $t$.
+\end{enumerate}
+
+\subsubsection{Underlay Access Reward}
+Under the underlay mode, VT $i$ can access channels occupied by PU, 
+provided that the interference caused to PU does not exceed a certain threshold. 
+the VT should prioritize accomplishing the data transmission required by its service rather than selecting the highest‑quality channel.
+When VT $i$ successfully accesses a channel at time $t$ using the underlay mode, it receives the following reward:
+\begin{equation}
+\label{eq:reward_v3} 
+\begin{split} 
+r_t^{i,j} &= \Phi _t^{'i,j}*C_t^{i,j}/C_{max} + \Omega _t^{i,j}, \\ 
+\Phi _t^{'i,j} &= \begin{cases} 
+\Gamma, & \text{overlay access mode} \\
+\Phi _t^{'i,j}, & \text{underlay access mode}, 
+\end{cases}
+\end{split}
+\end{equation} 
+Where $\Omega_t^{i,j}$ denote the interference caused to the PU when VT $i$ accesses channel $j$. Unlike the reward function under the overlay mode, the underlay mode uses compliance with the PU’s power/interference tolerance threshold as the criterion for positive reward: as long as VT $i$ completes access within this threshold, a positive reward is granted. Under the underlay mode, the DQI maintains its original range of 0 to 1. After iterative training, when a candidate channel contains a PU, the agent tends to prefer underlay mode because it yields a higher expected reward and more frequent positive feedback; in contrast, the overlay mode grants positive reward only when occupying an idle channel without causing interference to the PU, and applies substantial penalties for any interference.
+\begin{enumerate}
+	\item If VT $i$ does not access any channel at time $t$, the computations of $\Omega_t^{i,j}$ and $C_t^{i,j}$ are identical to those in equation \eqref{eq:no_access}.
+	\item If VT $i$ accesses an idle channel $j$, the computations of $\Omega_t^{i,j}$ and $C_t^{i,j}$ are identical to those in equation \eqref{eq:access_idle}.
+	\item If VT $i$ accesses  channel $j$ occupied by PU, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
+	\begin{equation}
+		\left\{ \begin{array}{l}
+C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t} + |h_t^{i,{\rm{PU}}}{|^2}P_t^{{\rm{MAX}},j}}}),\\
+\Omega _t^{i,j} = \partial (\Psi _t^{j,{\rm{PU}}} - |h_t^{i,{\rm{PU}}}{|^2}P_t^{i,j}),
+\end{array} \right.
+	\end{equation}
+\end{enumerate}
+where $\Psi _t^{j, {\rm{PU}}}$ is the power/interference tolerance threshold of PU on channel $j$ at time $t$. 
+$P_t^{{\rm{MAX}},j}$ is the maximum transmission power of VT on channel $j$ at time $t$.
+$h_t^{i,PU}$ represents the channel gain between VT $i$ and PU on channel $j$ at time $t$.
+\par
+\subsection{ESN-DDQN Strategy and Training Process}
+This section employs an experience replay protocol, wherein all state-action-reward pairs from all VTs are stored in an experience replay buffer. During the iteration process, each VT utilizes the mini-batch algorithm to extract experience tuples, which are then fed into the ESN-DDQN network for stochastic gradient descent to update the neural network parameters. The whole process is showed in Fig. \ref{fig3}.\par
+By employing DDQN, we separate the action selection and evaluation steps, while an additional DQN is introduced to reduce error propagation. Within the evaluation Q-network, each agent performs an $\epsilon$-greedy exploration-exploitation trade-off: it either selects a random action with probability $\epsilon$ or the optimal action with probability $1-\epsilon$.\par
+\begin{equation}
+\label{eq:action_selection_epsilon_greedy} 
+A_t^i = \begin{cases}
+    \text{random action}, & \text{with prob. } \varepsilon \\
+    \arg\max_{a \in \mathcal{A}} Q'(S_t^i, A_t^i), & \text{with prob.} 1-\varepsilon.
+\end{cases}
+\end{equation}
+The target $Q$-value of DDQN is Defined as follows:
+\begin{equation}
+\label{eq:q_target_exact} 
+Q^{\rm{Target}} = r_{t + 1}^i + \beta Q\left(S_{t + 1}^{i}, \mathop {\arg \max }\limits_{A_t^{'i}} Q(S_{t + 1}^{i},A_t^{'i};\vartheta );\vartheta '\right).
+\end{equation}
+\par
+The mean square error (MSE) loss function of the network is defined as follows:
+\begin{equation}
+\label{eq:loss_function_corrected} 
+L(\vartheta ) = {\rm{E}}\left[ Q_{{\rm{Target}}} - Q(S_t^{i},A_t^{i};\vartheta ) \right]^2,
+\end{equation}
+In each time slot, Weights $\vartheta$ of the DDQN are updated with the 
+purpose of minimizing the loss function according to equation (\ref{eq:loss_function_corrected}). The detailed steps of the algorithm are shown in Algorithm \ref{alg1}.
+\subsection{Computational Complexity Analysis}
+The computational complexity of the proposed ESN-DDQN-based access scheme is mainly determined by the ESN forward computation and the replay-based DDQN update. Let $\mathcal{R}$ denote the reservoir size and $M$ the number of channels. The reservoir state update and output mapping introduce complexities of $O(\mathcal{R}^2)$ and $O(\mathcal{R}M)$, respectively. Therefore, the computational complexity of one forward decision step for each VT is $O(\mathcal{R}^2+\mathcal{R}M)$. Considering a system with $N$ VTs, $\mathcal{E}$ training episodes, $\mathcal{L}$ iterations per episode, and minibatch size $\mathcal{B}$, the overall training complexity of the proposed algorithm is $O\big(\mathcal{E}\mathcal{L}(N+\mathcal{B})(\mathcal{R}^2+\mathcal{R}M)\big)$. Hence, the proposed method scales linearly with the numbers of VTs, channels, and training iterations, while the dominant computational overhead is mainly governed by the ESN reservoir size.
+\begin{algorithm}[!htbp] 
+\caption{High Quality ESN-DDQN-Based Adaptive Access Algorithm}
+\label{alg1}
+\begin{algorithmic}[1] 
+\STATE \textbf{Input:} Each VT's observation of the channel state vector, DQI vector, Channel prediction probability vector, Number of channels ($M$), Number of VTs ($N$).
+\STATE \textbf{Output:} The optimal channel access action for all VTs.
+\STATE Initialize the experience replay buffer, the sample size, the weight update interval, and the hyperparameters of ESN-DDQN Network.
+\FOR{episode = 1, 2, \ldots, $i$}
+    \STATE Initialize ESN-DDQN Network
+    \FOR{iteration = 1, 2, \ldots, $j$}
+        \STATE After receiving the CSI, the ESN updates the reservoir state vector and outputs an estimated Q-table $Q(S_t^{i},A_t^i)$ containing all access strategies of the next time slot.
+        \STATE Each VT selects an action $A_t^i$ under the state $S_t^i$ using the $\varepsilon$-greedy algorithm.
+        \STATE Each VT executes action $A_t^i$, gets the next state $S_{t + 1}^{i}$ and obtain the reward $r_{t + 1}^{i}$.
+        \STATE Store $(S_t^{i},A_t^i,r_{t + 1}^{i},S_{t + 1}^{i})$ in experience replay pool.
+        \IF{iteration in the replay cycle}
+            \FOR{$k = 1, 2, \ldots$, minibatch}
+                \STATE Random sample experience in the experience replay pool.
+                \STATE Calculate the MSE according to equation (\ref{eq:loss_function_corrected}).
+                \STATE Calculate the target Q-VALUE through DDQN according to equation (\ref{eq:q_target_exact}).
+                \STATE Calculate the loss function, quantifying the discrepancy between the target Q-VALUE  and the current output of the evaluation network. Subsequently, perform a gradient descent step to minimize this loss, thereby training the evaluation network.
+                \STATE update weights $\vartheta$.
+            \ENDFOR 
+        \ENDIF 
+    \ENDFOR 
+\ENDFOR 
+\end{algorithmic}
+\end{algorithm}
+\begin{table}[t]
+\centering
+\caption{Simulation Settings of the Proposed Algorithm}
+\label{tab:sim-settings}
+\begin{tabular}{l c}
+\toprule
+\textbf{Parameter} & \textbf{Value} \\
+\midrule
+Bandwidth $B^t_{i,j}$ & 200(KHz) \\
+Background noise $\mu _t$ &  $4 \times {10^{ - 5}}{\rm{(mW}}/{\rm{KHz)}}$ \\
+Maximum transmission power $P_t^{MAX}$ & 1 (mW) \\
+Penalty coefficient $\partial$  & $1-10$ \\
+Activation function  & ReLu \\
+Optimizer  & Adam  \\
+Learning rate $\alpha$ & 0.01\\
+Discount factor  $\beta$ & 0.9 \\
+Quality emphasis exponent $\Gamma$ & 2 \\
+\bottomrule
+\end{tabular}
+\end{table}
+\section{PERFORMANCE EVALUATION}
+In the simulation, PU activity on each channel is modeled as a two-state Markov chain with
+$p_{01}=P (\text{idle}\rightarrow \text{busy})$ and $p_{10}=P (\text{busy}\rightarrow \text{idle})$.To capture temporally correlated PU occupancy, we set $p_{01}=0.2$ and $p_{10}=0.2$ in the simulations. The learning rate decays gradually over time. To validate the proposed algorithm, we conduct 20 training rounds, each consisting of 5,000 decision steps. To emulate different channel occupancy, simulations are performed under $M=3, N=5$. and $M=5, N=3$. A packet is removed from the queue once it is successfully delivered; otherwise, it remains queued for retransmission in subsequent slots. If the queue is full upon a new arrival, the packet is dropped. Accordingly, the packet loss rate (PLR) is computed as the ratio of dropped packets to the total number of generated packets during the simulation.\par 
+To evaluate the performance of our proposed algorithm, we compare it against four baseline and ablation schemes. The Proposed algorithm utilizes the configurations given in Table \ref{tab:sim-settings}. The five schemes considered in our simulation are defined as follows:
+\begin{itemize}
+    \item \textbf{Adaptive Access (Full Model):} Our complete proposal, using both prediction and DQI.
+    \item \textbf{Fixed Overlay Access:} Baseline scheme; transmits only on idle channels.
+    \item \textbf{Fixed Underlay Access:} Baseline scheme; allows low-power coexistence with PUs.
+    \item \textbf{Adaptive Access (No-Prediction):}An ablation of our model, This algorithm retains the Transformer DQI assessment module but removes the prediction module.
+    \item \textbf{Adaptive Access (No-DQI):} An ablation of our Full Model. This algorithm retains the prediction module but removes the Transformer DQI assessment module.assessment module.
+\end{itemize}
+\par
+\subsection{Packet Loss Rate Comparison}
+ Packet arrivals at each VT follow a Bernoulli process. Specifically, in each time slot $t$, a new packet is generated with probability $p_a$; otherwise, no packet arrives. Each generated packet is buffered in a FIFO queue with maximum capacity. \par
+Fig.~\ref{fig4} compares the VT's PLR under the five schemes in the spectrum-scarce case ($M<N$). The proposed Adaptive Access (Full Model) converges to the lowest PLR and consistently outperforms both baselines and ablation variants. The ablation results indicate that removing either DQI assessment (No-DQI) or channel prediction (No-Prediction) increases PLR, confirming that both components contribute to reliability. In particular, under $M<N$, quality-aware selection is more critical due to limited spectrum resources: without DQI, the agent is more likely to access low-quality channels, leading to higher packet loss. Among the fixed baselines, Fixed Underlay Access yields a lower steady-state PLR than Fixed Overlay Access because controlled coexistence provides more transmission opportunities when idle channels are scarce.\par
+\begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig4.pdf}
+	\caption{Packet loss rate under the $M<N$ environment}
+	\label{fig4}
+\end{figure}
+\par
+Fig.~\ref{fig5} compares the PLR in the spectrum-abundant case ($M>N$). Although more channels are available, packet loss is mainly dominated by interruptions/collisions caused by PU returns (and sensing uncertainty), under which Fixed Overlay Access performs the worst due to frequent vacating, while Fixed Underlay Access benefits from coexistence. The ablation study exhibits a clear reversal compared with $M<N$: Adaptive Access (No-Prediction) degrades close to the overlay baseline, whereas Adaptive Access (No-DQI) remains close to the Full Model. This suggests that prediction-enabled collision/interruption avoidance becomes the dominant factor for reducing PLR in the $M>N$ regime, while the Full Model achieves the best performance by jointly leveraging prediction and quality-aware perception.
+\begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig5.pdf}	
+    \caption{Packet loss rate under the $M>N$ environment}
+	\label{fig5}
+\end{figure}
+\par
+
+\subsection{Average Throughput of PU Comparison}
+
+Fig.~\ref{fig6} compares the average PU throughput of the five schemes in the spectrum-scarce case ($M<N$). The proposed Adaptive Access (Full Model) converges to a high PU throughput, approaching the non-interfering Fixed Overlay Access baseline, which serves as an upper bound among the considered schemes. In contrast, Fixed Underlay Access yields the lowest PU throughput due to persistent coexistence-induced interference. The ablation results further reveal the key factor for incumbent protection: Adaptive Access (No-Prediction) degrades close to the Fixed Underlay Access baseline, whereas Adaptive Access (No-DQI) remains close to the Full Model (and the overlay upper bound). Overall, the results indicate that prediction is the dominant factor for PU protection, while DQI mainly contributes to VT-side QoS.
+\begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth,]{Fig6.pdf}
+	\caption{Average throughput of PU under the $M<N$ environment}
+	\label{fig6}
+\end{figure}
+\par
+
+Fig.~\ref{fig7} compares the average PU throughput in the spectrum-abundant case ($M>N$). Compared with Fig.~\ref{fig6}, all schemes achieve consistently higher PU throughput because abundant spectrum offers more non-conflicting channel choices for VTs, reducing co-channel interference to incumbents. Fixed Overlay Access again provides an upper bound among the considered schemes, whereas Fixed Underlay Access yields the lowest PU throughput due to persistent coexistence-induced interference. The proposed Adaptive Access (Full Model) and Adaptive Access (No-DQI) both converge close to the overlay upper bound, while Adaptive Access (No-Prediction) drops to a level near Fixed Underlay Access. These observations are consistent with the $M<N$ case and further suggest that prediction is the dominant factor for protecting incumbent PUs across different spectrum regimes.
+\begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig7.pdf}
+	\caption{Average throughput of PU under the $M>N$ environment}
+	\label{fig7}
+\end{figure}
+
+\subsection{Average DQI Comparison}
+
+ Fig.~\ref{fig8} compares the average DQI of the channels selected by VTs in the spectrum-scarce case ($M<N$). The proposed Adaptive Access (Full Model) achieves the highest average DQI, indicating effective quality-aware channel selection under scarcity. Fixed Overlay/Underlay Access provide reference baselines, while underlay selection can be affected by coexistence-induced interference. The ablation results show that Adaptive Access (No-DQI) yields the lowest average DQI, confirming that DQI awareness is necessary to prioritize high-quality channels. Adaptive Access (No-Prediction) still converges to a high DQI, suggesting that quality ranking can be learned even without prediction; however, its higher PLR in Fig.~\ref{fig4} indicates that high DQI alone does not guarantee reliable access without predictive collision/interruption avoidance. Overall, Fig.~\ref{fig8} highlights the role of the Transformer-based DQI module in learning quality-aware selection.
+  \begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig8.pdf}
+	\caption{Average DQI  under the $M<N$ environment}
+	\label{fig8}
+\end{figure}
+\par
+
+Fig.~\ref{fig9} compares the average DQI in the spectrum-abundant case ($M>N$). Compared with Fig.~\ref{fig8}, all schemes attain higher average DQI due to a larger pool of high-quality channels. Consistent with $M<N$, the Full Model remains the best in terms of DQI, while fixed baselines provide references. The ablation results are also consistent: the No-DQI variant again yields the lowest DQI, reinforcing that DQI awareness is essential for quality-aware selection across different spectrum regimes. No-Prediction still achieves high DQI, whereas its reliability is limited without prediction (cf. Fig.~\ref{fig5}). Overall, Fig.~\ref{fig9} corroborates the generalization of the DQI module under spectrum abundance.
+  \begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig9.pdf}
+	\caption{Average DQI  under the $M>N$ environment}
+	\label{fig9}
+\end{figure}
+\subsection{Average Throughput of VT Comparison}
+
+Fig. \ref{fig10} compares the average VT throughput in the spectrum-scarce case ($M<N$). The proposed Adaptive Access (Full Model) achieves the highest throughput by jointly leveraging quality-aware selection and prediction-aided access. Among fixed baselines, Underlay Access outperforms Overlay Access in $M<N$ since coexistence preserves more transmission opportunities when idle channels are scarce. The ablation results clarify the dominant factor for throughput under scarcity: Adaptive Access (No-Prediction) remains close to the Full Model, indicating that DQI-driven quality ranking is the primary enabler of throughput in $M<N$. By contrast, Adaptive Access (No-DQI) degrades markedly because prediction alone cannot prevent low-quality channel choices from limiting the achievable rate. Overall, Fig. \ref{fig10} suggests that DQI is the dominant factor for VT throughput in the spectrum-scarce regime.
+  \begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig10.pdf}
+	\caption{Average Throughput  of VT  under the $M<N$ environment}
+	\label{fig10}
+\end{figure}
+\par
+Fig. \ref{fig11} compares the average VT throughput in the spectrum-abundant case ($M>N$). The proposed Adaptive Access (Full Model) again achieves the highest throughput by combining prediction and quality-aware selection. Underlay Access becomes less efficient in $M>N$ because conservative coexistence limits the achievable rate when many idle channels are available, while Overlay Access is also constrained by interruptions under PU returns without prediction. The ablation study shows that Adaptive Access (No-Prediction) drops close to the Overlay baseline, indicating that prediction is critical for avoiding interruptions/collisions in $M>N$. In contrast, Adaptive Access (No-DQI) remains close to the Full Model, suggesting that quality ranking is less dominant when abundant channels provide many feasible options. Together with Fig. \ref{fig10}, these results highlight a regime-dependent dominance: DQI is more influential under scarcity, whereas prediction dominates under abundance.
+   \begin{figure}
+	\centering 
+	\includegraphics[width=1\columnwidth]{Fig11.pdf}
+	\caption{Average Throughput of VT under the $M>N$ environment}
+	\label{fig11}
+\end{figure}
+\subsection{ Converge Speed Comparison}
+To validate the main motivation for adopting ESN, namely fast convergence, we compare the proposed ESN-DDQN with three representative baselines, i.e., tabular Q-learning \cite{ref34}, Multi-Layer Perceptron(MLP)-DDQN \cite{ref35}, and LSTM-DDQN \cite{ref36}, in terms of the number of iterations required for convergence. As shown in Fig.~\ref{fig12}, ESN-DDQN consistently converges in the fewest iterations under both the $M<N$ and $M>N$ settings. In particular, LSTM-DDQN exhibits the slowest convergence due to the high training overhead introduced by backpropagation through time, while DDQN converges faster than LSTM-DDQN but cannot effectively exploit temporal correlations in dynamic channel states. By contrast, ESN-DDQN benefits from the reservoir computing mechanism, where only the output weights are trained and the recurrent reservoir remains fixed, thereby substantially reducing training overhead and accelerating policy updates.
+   \begin{figure}
+	\centering
+	\includegraphics[width=1\columnwidth]{Fig12.pdf}
+	\caption{Convergence Speed Comparsion}
+	\label{fig12}
+\end{figure}
+\section{Conclusion}
+This paper proposed an adaptive access algorithm for CVNs that jointly addresses comprehensive spectrum quality assessment and efficient decision-making in high-dimensional continuous state spaces. A Transformer-based quality evaluation mechanism was introduced to derive a comprehensive DQI from multiple spectrum-related parameters, and a channel-state prediction model was incorporated to mitigate the limitations of imperfect instantaneous sensing. Based on this quality- and prediction-aware state representation, an ESN-DDQN-based decision framework with differentiated reward design was developed to support adaptive overlay/underlay access. Experimental results demonstrated that the proposed algorithm effectively improves VT communication performance in terms of PLR and average throughput, while maintaining PU throughput at a level comparable to that of the fixed overlay access strategy.
+\bibliographystyle{IEEEtran}
+% argument is your BibTeX string definitions and bibliography database(s)
+\bibliography{bib/IEEEabrv,bib/references}
+\newpage
+\end{document}
