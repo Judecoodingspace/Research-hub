@@ -16,8 +16,10 @@
 | UAV-Multi-Model | 多模态语义通信、任务导向资源管理 | `papercard/UAV-Multi-Model/index.md` | 已有 |
 | UAV-LLM | UAV 多模态推理、大模型评测与语义判断 | `papercard/UAV-LLM/index.md` | 已有 |
 | UAV-Resouce-Alloaction | 多 UAV 资源分配、轨迹优化、协同卸载 | `papercard/UAV-Resouce-Alloaction/index.md` | 已有 |
+| UAV-Task-Scheduling | 异构 UAV 集群任务调度与资源分配（Zhang 2026 DMMP-PR-TSA） | `papercard/UAV-Task-Scheduling/index.md` | 已生成 1 篇 paper card |
 | UAV-Task-Oriented-Communication | UAV 任务导向语义通信：从单机语义块选择→个性化语义编码→多UAV多模态协同资源分配 | `papercard/UAV-Task-Oriented-Communication/index.md` | 已生成 3 篇 paper card |
 | CVN-DSA | 认知车联网动态频谱接入算法，退稿重投中，需系统文献对比支撑审稿回复 | `papercard/CVN-DSA/index.md` | 目录已建立，待填充 |
+| arxiv_daily | arXiv 每日订阅自动筛选的论文（跨话题） | `papercard/arxiv_daily/index.md` | 已生成 2 篇 paper card |
 
 ## CVN-DSA 本轮新增
 - `papercard/CVN-DSA/Liu2024_Joint_Collaborative_Big_Spectrum_Data_Sensing_RL_DSA.md`
@@ -33,6 +35,9 @@
 ## UAV-Semantic-Communication 本轮新增
 - `papercard/UAV-Semantic-Communication/2026_Han_MC_DSA_Multi_UAV_Cooperative_Deep_Semantic_Autoencoders.md`
 
+## UAV-Task-Scheduling 本轮新增
+- `papercard/UAV-Task-Scheduling/2026_Zhang_DMMP-PR-TSA_Scheduling_Heterogeneous_UAV_Swarms.md`
+
 ## UAV-Task-Oriented-Communication 本轮新增
 - `papercard/UAV-Task-Oriented-Communication/2022_Kang_Task_Oriented_Image_Transmission_Scene_Classification_UAV.md`
 - `papercard/UAV-Task-Oriented-Communication/2023_Kang_Personalized_Saliency_Task_Oriented_Semantic_Comm.md`
@@ -40,3 +45,7 @@
 
 ## 高重合度冲击评估
 - Han 2026 MC-DSA | 高重合度文献 | 已生成冲击评估 | `compare/UAV-High-Overlap-Impact/20260508_han_mc_dsa_impact_on_my_idea.md`
+
+## arxiv_daily 本轮新增
+- `papercard/arxiv_daily/2026_Hu_Multi_UAV_Tracking_Handover.md`
+- `papercard/arxiv_daily/2026_Wu_Task_Semantic_Graph_Underwater_Target_Tracking.md`

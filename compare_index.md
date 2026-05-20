@@ -13,6 +13,7 @@
 | UAV-Multi-Model | `compare/UAV-Multi-Model/overview.md` | 多模态任务语义通信与资源优化比较 | 已有 |
 | UAV-LLM | `compare/UAV-LLM/overview.md` | UAV 多模态推理和 LLM 相关比较 | 已有 |
 | UAV-Resouce-Alloaction | `compare/UAV-Resouce-Alloaction/overview.md` | 多 UAV 资源分配与轨迹优化比较 | 已有 |
+| UAV-Task-Scheduling | — | Zhang 2026 DMMP-PR-TSA 单篇已生成 papercard + literature_insights；与 Paper 3 的交叉对照见 `literature_insights/paper3-conditional-collaboration/Zhang2026_heterogeneous_UAV_swarm_scheduling.md` | 无需单独 compare 文件 |
 | UAV-High-Overlap-Impact | `compare/UAV-High-Overlap-Impact/20260508_han_mc_dsa_impact_on_my_idea.md` | 高重合度文献对当前 conditional semantic collaboration / multi-action selector idea 的冲击评估 | 已生成 |
 | UAV-Task-Oriented-Communication | `compare/UAV-Task-Oriented-Communication/overview.md` | 三篇任务导向语义通信论文横向比较：块选择→个性化语义→多UAV多模态资源分配演进及其与当前论文的对照 | 已生成 |
 | CVN-DSA | `compare/CVN-DSA/overview.md` | 认知车联网频谱接入算法横向比较，支撑审稿意见回复 | 目录已建立，待填充 |

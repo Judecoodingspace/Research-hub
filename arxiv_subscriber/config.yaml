@@ -1,0 +1,220 @@
+# ============================================================
+# arXiv 领域订阅配置
+# 修改此文件即可调整订阅范围，无需改代码
+# ============================================================
+
+# --- arXiv API 参数 ---
+arxiv:
+  # 每次查询的最大返回结果数 (arXiv API 限制建议 ≤100)
+  max_results: 50
+  # 查询间隔 (天) — 每次拉取最近 N 天的新论文
+  lookback_days: 2
+  # 请求延迟 (秒) — arXiv 要求礼貌访问，建议 ≥ 10 秒
+  delay_seconds: 12
+  # 结果排序: submittedDate | relevance | lastUpdatedDate
+  sort_by: "submittedDate"
+
+# --- 领域分类与关键词 ---
+# 每个领域会产出一个独立的 papercard 子目录
+# 同时满足多个关键词的论文优先归类到第一个匹配的领域
+
+categories:
+  - name: "UAV-Semantic-Communication"
+    label: "多无人机协同语义通信"
+    folder: "UAV-Semantic-Communication"
+    queries:
+      - "UAV semantic communication"
+      - "multi-UAV cooperative sensing communication"
+      - "task-oriented communication drone"
+      - "UAV task-oriented semantic"
+      - "drone cooperative perception communication"
+
+  - name: "UAV-Split-Computing"
+    label: "UAV分割计算与端边协同"
+    folder: "UAV-Split-Computing"
+    queries:
+      - "UAV split computing edge inference"
+      - "drone model splitting edge"
+      - "UAV collaborative inference edge server"
+      - "split learning UAV drone"
+
+  - name: "UAV-Resource-Allocation"
+    label: "多UAV资源分配与调度"
+    folder: "UAV-Resource-Allocation"
+    queries:
+      - "UAV resource allocation trajectory optimization"
+      - "multi-UAV task scheduling swarm"
+      - "drone swarm resource management"
+      - "UAV energy-efficient resource allocation"
+
+  - name: "UAV-Task-Oriented-Communication"
+    label: "UAV任务导向通信"
+    folder: "UAV-Task-Oriented-Communication"
+    queries:
+      - "task-oriented image transmission UAV"
+      - "semantic communication task-oriented drone"
+      - "personalized saliency semantic communication"
+      - "multi-modal semantic communication UAV"
+
+  - name: "UAV-LLM"
+    label: "UAV多模态推理与大模型"
+    folder: "UAV-LLM"
+    queries:
+      - "UAV multimodal reasoning large language model"
+      - "drone vision language model"
+      - "UAV LLM inference edge"
+      - "drone multimodal perception LLM"
+
+  - name: "UAV-Fire-Detection"
+    label: "无人机山火检测"
+    folder: "UAV-Fire-Detection"
+    queries:
+      - "UAV wildfire detection forest fire"
+      - "drone fire detection monitoring"
+      - "UAV swarm fire disaster"
+      - "UAV thermal fire detection"
+
+  - name: "CVN-DSA"
+    label: "认知车联网动态频谱接入"
+    folder: "CVN-DSA"
+    queries:
+      - "cognitive vehicular network dynamic spectrum access"
+      - "spectrum sensing vehicular network"
+      - "DSRC spectrum access vehicular"
+      - "connected vehicle spectrum sharing"
+
+  - name: "Multi-Agent-Coordination"
+    label: "多智能体协同与路径规划"
+    folder: "Multi-Agent-Coordination"
+    queries:
+      - "multi-agent coordination UAV path planning"
+      - "drone formation control cooperative path"
+      - "UAV trajectory optimization multi-agent"
+      - "multi-agent reinforcement learning UAV coverage"
+
+  - name: "Edge-AI-General"
+    label: "边缘AI通用技术（备选）"
+    folder: "Edge-AI-General"
+    queries:
+      - "edge AI inference optimization pruning quantization"
+      - "federated learning edge device"
+      - "knowledge distillation edge deployment"
+      - "tinyML edge computing"
+
+# ============================================================
+# IEEE / 闭源期刊订阅配置（通过 Semantic Scholar API）
+# ============================================================
+# IEEE RSS feed 已封闭 (HTTP 404/418)，CrossRef 无摘要。
+# 方案：通过 Semantic Scholar API 按关键词搜索 + 按期刊名过滤。
+# Semantic Scholar 免费、无需 API Key，但有限流（建议延迟 ≥ 3 秒）。
+ieee_subscriber:
+  enabled: true
+  # 每次查询的最大返回结果数
+  max_results: 50
+  # 查询间隔 (天) — 每次拉取最近 N 天的新论文
+  lookback_days: 30
+  # 请求延迟 (秒) — Semantic Scholar 建议礼貌访问
+  delay_seconds: 5
+  # 结果排序: publicationDate | relevance
+  sort_by: "publicationDate"
+
+  # --- 方案A：关键词搜索（全局搜索，覆盖面广） ---
+  keyword_queries:
+    - "UAV semantic communication cooperative"
+    - "UAV task-oriented communication drone"
+    - "multi-UAV collaborative perception edge"
+    - "drone swarm resource allocation communication"
+    - "UAV split computing edge inference"
+    - "cognitive radio dynamic spectrum access vehicular"
+    - "UAV wildfire detection forest fire"
+    - "drone vision language model multimodal"
+    - "UAV trajectory optimization multi-agent coordination"
+    - "semantic communication resource allocation wireless"
+
+  # --- 方案B：按期刊 ISSN 搜索（目标期刊精确匹配） ---
+  # 通过 Semantic Scholar 的期刊过滤 + 关键词
+  target_journals:
+    - name: "IEEE Transactions on Communications"
+      issn: "0090-6778"
+      keyword: "UAV OR drone OR semantic communication"
+    - name: "IEEE Transactions on Wireless Communications"
+      issn: "1536-1276"
+      keyword: "UAV OR drone OR semantic communication"
+    - name: "IEEE Transactions on Vehicular Technology"
+      issn: "0018-9545"
+      keyword: "UAV OR drone OR resource allocation"
+    - name: "IEEE Internet of Things Journal"
+      issn: "2327-4662"
+      keyword: "UAV OR drone OR edge computing"
+    - name: "IEEE Journal on Selected Areas in Communications"
+      issn: "0733-8716"
+      keyword: "UAV OR semantic communication OR wireless"
+    - name: "IEEE Transactions on Cognitive Communications and Networking"
+      issn: "2332-7731"
+      keyword: "UAV OR cognitive radio OR spectrum access"
+    - name: "IEEE Transactions on Mobile Computing"
+      issn: "1536-1233"
+      keyword: "UAV OR drone OR mobile edge computing"
+    - name: "IEEE Transactions on Signal Processing"
+      issn: "1053-587X"
+      keyword: "UAV OR drone OR array signal processing"
+    - name: "IEEE Communications Letters"
+      issn: "1089-7798"
+      keyword: "UAV OR semantic communication OR resource allocation"
+    - name: "IEEE Transactions on Intelligent Transportation Systems"
+      issn: "1524-9050"
+      keyword: "UAV OR drone OR vehicular communication"
+    - name: "IEEE Access"
+      issn: "2169-3536"
+      keyword: "UAV OR drone OR semantic communication"
+    - name: "IEEE Transactions on Aerospace and Electronic Systems"
+      issn: "0018-9251"
+      keyword: "UAV OR drone OR swarm"
+
+  # --- 方案C：CrossRef DOI 补充检索（当 S2 未返回摘要时备用） ---
+  crossref_fallback:
+    enabled: true
+    # CrossRef 的 polite pool 建议 email
+    email: "research@example.com"
+
+# --- 去重规则 ---
+# 基于 arXiv ID 去重（每篇论文在 arXiv 上有唯一 ID）
+# 已处理的论文 ID 记录在 arxiv_subscriber/processed_ids.json 中
+dedup:
+  enabled: true
+  id_store: "arxiv_subscriber/processed_ids.json"
+
+# --- 初筛相关性分级规则 ---
+# "高相关"：匹配 ≥2 个查询词 或 标题/摘要包含 2+ 核心概念词
+# "中相关"：匹配 1 个查询词，或摘要提及 UAV/drone + 通信/感知/推理之一
+# "低相关"：仅泛泛提及 UAV 或 drone，不涉及具体机制
+screening:
+  high_keywords:
+    - "semantic communication"
+    - "task-oriented"
+    - "multi-UAV cooperative"
+    - "dynamic spectrum access"
+    - "split computing"
+    - "model splitting"
+    - "resource allocation"
+    - "trajectory optimization"
+    - "multimodal"
+    - "LLM inference"
+    - "fire detection"
+    - "edge intelligence"
+    - "collaborative perception"
+    - "joint communication"
+    - "semantic segmentation"
+    - "source selection"
+    - "deep reinforcement learning"
+    - "bandwidth constrained"
+    - "latency"
+  medium_keywords:
+    - "UAV"
+    - "drone"
+    - "swarm"
+    - "edge computing"
+    - "wireless communication"
+    - "machine learning"
+    - "deep learning"
+    - "IoT"

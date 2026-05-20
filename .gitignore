@@ -17,6 +17,24 @@ get-pip.py
 papers/**/*.pdf
 papercard/**/*.pdf
 
+# Excluded from git tracking (per project policy)
+Mermaid/
+experiments_recording/
+literature_insights/
+week_report/
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+*.pdf
+
+# LaTeX source — allow in paper_specs/
+!paper_specs/**/*.tex
+
 # OS noise
 .DS_Store
 Thumbs.db

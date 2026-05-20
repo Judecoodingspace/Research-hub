@@ -17,6 +17,16 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{textcase}
+% ========== 修回稿颜色标记 ==========
+\usepackage{xcolor}
+% 新增/修改的文字用蓝色
+\newcommand{\revise}[1]{\textcolor{blue}{#1}}
+% 删除的文字用红色加删除线（需要 ulem 宏包）
+\usepackage[normalem]{ulem}
+\newcommand{\remove}[1]{\textcolor{red}{\sout{#1}}}
+% 新增的公式（蓝色框 + 蓝色公式）
+\newcommand{\reviseEq}[1]{\color{blue}#1\color{black}}
+% =====================================
 \usepackage[colorlinks,linkcolor=blue,anchorcolor=black,citecolor=blue]{hyperref}
 \hyphenation{op-tical net-works semi-conduc-tor IEEE-Xplore}
 
@@ -158,9 +168,31 @@ We adopt a slotted-time model with slot duration $\Delta t$. In each slot, PU ac
 \par
 To limit dissemination overhead, each BS processes the server outputs and broadcasts a compact summary to nearby VTs. The overhead is low because the payload contains only per-channel summary indicators (e.g., quantized DQI and predicted occupancy probability). The summary is broadcast periodically with update interval $T_{\mathrm{upd}}$, chosen such that $T_{\mathrm{upd}}<T_{\mathrm{stat}}$, where $T_{\mathrm{stat}}$ denotes the validity time of the statistical descriptors. At each decision epoch, each VT selects at most one channel for access. Using the received summary, each VT performs lightweight inference with the ESN-DDQN policy to select its access action. Overall, offloading DQI evaluation and channel prediction to the server keeps the VT-side computation lightweight while enabling adaptive access decisions.
 \par
+\revise{The BS has access to two sources of location information. 
+First, its own position is fixed and known. Second, each VT periodically reports its current position via Vehicle to Everthing (V2X) 
+Cooperative Awareness Messages (CAM) at $10$~Hz. The BS also maintains a registry of PU transmitter locations, 
+which are static or slowly varying. For a given VT~$i$ and PU on channel~$j$, the BS computes the Euclidean distance $d_{ij} = \|\text{VT}_i - \text{PU}_j\|_2$. 
+It then evaluates the 3GPP UMi-Street Canyon path loss model at carrier frequency $f_c = 5.9$~GHz to obtain the large-scale path loss $PL(d_{ij})$ in dB. The parth-loss 
+proxy is defined as $\hat{g}_t^{i,\mathrm{PU}} = 10^{-PL(d_{ij})/10}$, i.e., the inverse of the linear path loss. This proxy captures only the distance-dependent deterministic attenuation. To account for unmodeled shadowing and small-scale fading,
+a multiplicative fading margin $\kappa > 1$ is applied, yielding the conservative interference bound $\hat{g}_t^{i,\mathrm{PU}} \cdot \kappa$ used in underlay power control and compliance gating.}
+\par
+
+\revise{The channel gain between VT~$i$ and the BS on channel~$j$ is modeled as
+\begin{equation}
+|h_t^{i,j}|^2 = |\tilde{h}_t^{i,j}|^2 \cdot 10^{-(PL_t^{j} + g_t^{j})/10},
+\end{equation}
+where $|\tilde{h}_t^{i,j}|^2$ denotes the Rician small-scale fading component,
+$PL_t^{j}$ is the distance-dependent path loss (dB) evaluated via the 3GPP UMi-Street Canyon model at $f_c=5.9$~GHz, and $g_t^{j}\sim\mathcal{N}(0,\mu^2)$ with $\mu=4$~dB captures the log-normal shadowing.
+The Rician fading power follows
+\begin{equation}
+|\tilde{h}_t^{i,j}|^2 = \Bigl|\sqrt{\frac{K}{K+1}}\,h_{\rm LOS} + \sqrt{\frac{1}{K+1}}\,h_{\rm NLOS}\Bigr|^2,
+\end{equation}
+where $h_{\rm LOS}=1$, $h_{\rm NLOS}\sim\mathcal{CN}(0,1)$, and $K$ is the Rician $K$-factor ($K_{\rm dB}=3$~dB).}
+\par
 In this paper, signal-to-noise ratio (SNR), received signal strength (RSS), and bandwidth are employed as three metrics for characterizing spectrum quality. For each channel $j\in\{1,2,\ldots,M\}$ at slot $t$, the BS (or the infrastructure) maintains a channel-level descriptor vector
 $\mathbf{x}_t^{j}=[\gamma_t^{j},\,\xi_t^{j},\,B_t^{j}]$, which represents the quality information of channel 
-$j$ at time slot $t$, obtained from the current sensing outcome and the associated measurement data.
+$j$ at time slot $t$, obtained from the current sensing outcome and the associated measurement data.\par
+
 
 The SNR indicator for channel $j$ at slot $t$ is given by
 \begin{equation}
@@ -294,15 +326,17 @@ C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t}}}
 \end{array} \right.
 \label{eq:access_idle}
 \end{equation}
-where $B_t^{i,j}$ is the bandwidth of channel $j$ detected by VT $i$ at time $t$. $h_t^{i,j}$ is the channel gain of channel $j$ detected by VT $i$ at time $t$. $\mu_t$ is the noise power at time $t$. $P_t^{i,j}$ is the transmission power of channel $j$ detected by VT $i$ at time $t$.
-	\item Under overlay mode, selecting an occupied channel is allowed in the action space but
-	 will incur a penalty, encouraging the policy to avoid PU/SU collisions. 
-	 If VT $i$ accesses a channel $j$ occupied by PU, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
+where $B_t^{i,j}$ is the bandwidth of channel $j$ detected by VT $i$ at time $t$. $h_t^{i,j}$ is the channel gain of channel $j$ detected by VT $i$ at time $t$. $\mu_t$ is the noise power at time $t$. 
+    $P_t^{i,j}$ is the transmission power of channel $j$ detected by VT $i$ at time $t$. \revise{Under the overlay mode, only idle channels are accessed by design. Since the PU is absent on an idle channel, no SU-to-PU interference exists,
+	and the transmit power is limited solely by the VT's hardware capability $P_t^{{\rm{MAX}},j}$.}
+	\item Under overlay mode, selecting an occupied channel is allowed in the action space but will incur a penalty, encouraging the policy to avoid PU/SU collisions. If VT $i$ accesses a channel $j$ occupied by PU, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
 	\begin{equation}
+{\color{red}
 \left\{ \begin{array}{l}
 C_t^{i,j} = 0,\\
 \Omega _t^{i,j} = \frac{{\partial |h_t^{i,{\rm{PU}}}{|^2}P_t^{i,j}}}{{\Psi _T^{j,{\rm{PU}}}}},
 \end{array} \right.
+}
 	\end{equation}
 \par where $h_t^{i,{\rm{PU}}}$ is the channel gain between VT $i$ and PU at time $t$. $P_t^{i,j}$ is the transmission power of channel $j$ detected by VT $i$ at time $t$. $\partial$ is a negative penalty factor, which is used to penalize the interference caused by VT $i$ to PU when accessing a channel occupied by PU. $\Psi _t^{j, {\rm{PU}}}$ is the power/interference tolerance threshold of PU on channel $j$ at time $t$. 
 
@@ -322,30 +356,52 @@ provided that the interference caused to PU does not exceed a certain threshold.
 the VT should prioritize accomplishing the data transmission required by its service rather than selecting the highest‑quality channel.
 When VT $i$ successfully accesses a channel at time $t$ using the underlay mode, it receives the following reward:
 \begin{equation}
-\label{eq:reward_v3} 
-\begin{split} 
-r_t^{i,j} &= \Phi _t^{'i,j}*C_t^{i,j}/C_{max} + \Omega _t^{i,j}, \\ 
-\Phi _t^{'i,j} &= \begin{cases} 
-\Gamma, & \text{overlay access mode} \\
-\Phi _t^{'i,j}, & \text{underlay access mode}, 
-\end{cases}
-\end{split}
-\end{equation} 
-Where $\Omega_t^{i,j}$ denote the interference caused to the PU when VT $i$ accesses channel $j$. Unlike the reward function under the overlay mode, the underlay mode uses compliance with the PU’s power/interference tolerance threshold as the criterion for positive reward: as long as VT $i$ completes access within this threshold, a positive reward is granted. Under the underlay mode, the DQI maintains its original range of 0 to 1. After iterative training, when a candidate channel contains a PU, the agent tends to prefer underlay mode because it yields a higher expected reward and more frequent positive feedback; in contrast, the overlay mode grants positive reward only when occupying an idle channel without causing interference to the PU, and applies substantial penalties for any interference.
+\label{eq:reward_unified}
+{\color{blue}
+r_t^{i,j} = \Phi_t^{'i,j} * C_t^{i,j}/C_{\max} * \sigma(\Omega_t^{i,j}) - \partial[1 - \sigma(\Omega_t^{i,j})]
+}
+\end{equation}
+Where $\Omega_t^{i,j}$ denote the interference caused to the PU when VT $i$ accesses channel $j$. \revise{In (17), $\sigma(x) = 1/(1 + e^{-x})$ is the sigmoid function.} Unlike the reward function under the overlay mode, the underlay mode uses compliance with the PU’s power/interference tolerance threshold
+ as the criterion for positive reward: as long as VT $i$ completes access within this threshold, a positive reward is granted. 
+ Under the underlay mode, the DQI maintains its original range of 0 to 1.
+%   After iterative training, when a candidate channel contains a PU, the agent tends to prefer underlay mode because it yields a higher expected reward and more frequent positive feedback; in contrast, the overlay mode grants positive reward only when occupying an idle channel without causing interference to the PU, and applies substantial penalties for any interference.
 \begin{enumerate}
 	\item If VT $i$ does not access any channel at time $t$, the computations of $\Omega_t^{i,j}$ and $C_t^{i,j}$ are identical to those in equation \eqref{eq:no_access}.
 	\item If VT $i$ accesses an idle channel $j$, the computations of $\Omega_t^{i,j}$ and $C_t^{i,j}$ are identical to those in equation \eqref{eq:access_idle}.
 	\item If VT $i$ accesses  channel $j$ occupied by PU, $\Omega _t^{i,j}$ and $C_t^{i,j}$ can be denoted as
-	\begin{equation}
-		\left\{ \begin{array}{l}
-C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t} + |h_t^{i,{\rm{PU}}}{|^2}P_t^{{\rm{MAX}},j}}}),\\
-\Omega _t^{i,j} = \partial (\Psi _t^{j,{\rm{PU}}} - |h_t^{i,{\rm{PU}}}{|^2}P_t^{i,j}),
+% 	\begin{equation}
+% 		\left\{ \begin{array}{l}
+% C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t} + |h_t^{i,{\rm{PU}}}{|^2}P_t^{{\rm{MAX}},j}}}),\\
+% \Omega _t^{i,j} = \partial (\Psi _t^{j,{\rm{PU}}} - |h_t^{i,{\rm{PU}}}{|^2}P_t^{i,j}),
+% \end{array} \right.
+% 	\end{equation}
+\begin{equation}
+\label{eq:access_pu_underlay_new}
+{\color{blue}
+\left\{ \begin{array}{l}
+C_t^{i,j} = B_t^{i,j}{\log _2}(1 + \frac{{|h_t^{i,j}{|^2}P_t^{i,j}}}{{{\mu _t} + I_{{\rm{sensed}}}^j}}),\\
+\Omega _t^{i,j} = \Psi _t^{{\rm{PU}},j} - \hat g_t^{{\rm{PU}},i} * \kappa  * P_t^{i,j}.
 \end{array} \right.
-	\end{equation}
+}
+\end{equation}
 \end{enumerate}
-where $\Psi _t^{j, {\rm{PU}}}$ is the power/interference tolerance threshold of PU on channel $j$ at time $t$. 
-$P_t^{{\rm{MAX}},j}$ is the maximum transmission power of VT on channel $j$ at time $t$.
-$h_t^{i,PU}$ represents the channel gain between VT $i$ and PU on channel $j$ at time $t$.
+ \revise{To limit mutual interference, the transmit power of VT~$i$ on channel~$j$ is constrained as ${\color{blue}P_t^{i,j} = \min\!\bigl(P_{\max},\; \Psi_t^{j,{\rm PU}} / (\hat{g}_t^{i,{\rm PU}} \cdot \kappa)\bigr)}$. where $\Psi _t^{{\rm{PU}},j}$ is the power/interference tolerance threshold of PU on channel $j$ at
+ time $t$. Accordingly, each channel is allowed to accommodate at most one PU and at most one active VT simultaneously, and the minimum required transmission rate of the PU occupying that channel must be satisfied, i.e.,
+}
+\begin{equation}
+{\color{blue}
+B_t^{i,j}{\log _2}\Bigl(1 + \frac{|h_t^{{\rm{PU}},j}|^2 P_t^{{\rm{PU}},j}}{\mu_t + \Psi_t^{{\rm{PU}},j}}\Bigr) \ge C_{\min}
+}
+\end{equation}
+\revise{where $h_t^{{\rm{PU}},j}$ is the channel gain between the PU and the BS on channel $j$ at time $t$, $P_t^{{\rm{PU}},j}$ is the transmission power of the PU on channel $j$ at time $t$,
+and $C_{\min}$ is the minimum required transmission rate of the PU. Hence $\Psi _t^{{\rm{PU}},j}$ can be calculated as}
+\begin{equation}
+{\color{blue}
+\Psi_t^{{\rm{PU}},j} = \frac{|h_t^{{\rm{PU}},j}|^2 \cdot P_t^{{\rm{PU}},j}}{2^{\frac{C_{\min}}{B_t^{i,j}}} - 1} - \mu_t
+}
+\end{equation}
+% $P_t^{{\rm{MAX}},j}$ is the maximum transmission power of VT on channel $j$ at time $t$.
+% $h_t^{i,PU}$ represents the channel gain between VT $i$ and PU on channel $j$ at time $t$.
 \par
 \subsection{ESN-DDQN Strategy and Training Process}
 This section employs an experience replay protocol, wherein all state-action-reward pairs from all VTs are stored in an experience replay buffer. During the iteration process, each VT utilizes the mini-batch algorithm to extract experience tuples, which are then fed into the ESN-DDQN network for stochastic gradient descent to update the neural network parameters. The whole process is showed in Fig. \ref{fig3}.\par
