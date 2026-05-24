@@ -49,6 +49,42 @@ def load_config() -> Dict:
 
 
 # =============================================
+# 代理配置（与 fetcher.py 共用 PROXY 设置）
+# =============================================
+
+def _get_proxy_handler():
+    """获取代理处理器，优先使用环境变量，其次使用 fetcher.py 的 PROXY 字典"""
+    # 先尝试从环境变量获取
+    for env_var in ["HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy"]:
+        val = os.environ.get(env_var, "")
+        if val:
+            return urllib.request.ProxyHandler({"https": val, "http": val})
+    
+    # 尝试从 fetcher 模块读取 PROXY 配置
+    try:
+        from fetcher import PROXY
+        if PROXY.get("http") or PROXY.get("https"):
+            proxies = {}
+            if PROXY.get("http"):
+                proxies["http"] = PROXY["http"]
+            if PROXY.get("https"):
+                proxies["https"] = PROXY["https"]
+            else:
+                proxies["https"] = PROXY.get("http", "")
+            if proxies:
+                return urllib.request.ProxyHandler(proxies)
+    except ImportError:
+        pass
+    
+    return None
+
+
+# 全局初始化
+_PROXY_HANDLER = _get_proxy_handler()
+if _PROXY_HANDLER:
+    print(f"     🌐 IEEE subscriber 已启用代理通过端口 7890")
+
+# =============================================
 # 去重管理（与 arXiv 共用 processed_ids.json）
 # =============================================
 
@@ -114,7 +150,15 @@ def _s2_request(url: str, max_retries: int = 5, delay: float = 3.0) -> dict:
                 url,
                 headers={"User-Agent": "ResearchHub/1.0 (mailto:research@example.com)"},
             )
-            with urllib.request.urlopen(req, timeout=30, context=_create_ssl_context()) as resp:
+            if _PROXY_HANDLER:
+                # 将 SSL context 注入 HTTPSHandler（opener.open() 不接受 context 参数）
+                ssl_context = _create_ssl_context()
+                https_handler = urllib.request.HTTPSHandler(context=ssl_context)
+                opener = urllib.request.build_opener(https_handler, _PROXY_HANDLER)
+                resp = opener.open(req, timeout=30)
+            else:
+                resp = urllib.request.urlopen(req, timeout=30, context=_create_ssl_context())
+            with resp:
                 body = resp.read().decode("utf-8")
                 return json.loads(body)
         except urllib.error.HTTPError as e:

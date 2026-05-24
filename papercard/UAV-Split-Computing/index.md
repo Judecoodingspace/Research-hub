@@ -14,3 +14,5 @@
 
 ## 已生成成果
 - `papercard/UAV-Split-Computing/2024_Deng_ISCC_Adaptive_DNN_Splitting_Multi_UAV_Networks.md`
+
+| 2026 | X. Zhai; Shuang Fu; Changyan Yi; Zhiquan Liu; Chao... | [Deep Reinforcement Learning-Based Task Offloading With Colla...](2026_Zhai_Deep_Reinforcement_Learning-Based_Task_Offloading_With_Colla.md) | HIGH | 2026-05-24 |

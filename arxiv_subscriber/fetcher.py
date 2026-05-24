@@ -204,6 +204,13 @@ def compute_relevance(metadata: Dict, config: Dict) -> tuple:
 ARXIV_API_BASE = "https://export.arxiv.org/api/query"
 ARXIV_RSS_BASE = "https://rss.arxiv.org/rss"
 
+# --- 代理配置 ---
+# 如在国内访问 arXiv 不稳定，在此处设置 HTTP/HTTPS 代理
+PROXY = {
+    "http": "http://127.0.0.1:7890",
+    "https": "http://127.0.0.1:7890",
+}
+
 # arXiv 主要分类 → RSS feed 映射
 # 覆盖项目关注的方向：CV、通信、网络、AI、机器人
 RSS_CATEGORIES = [
@@ -225,16 +232,62 @@ NS = {
     'arxiv': 'http://arxiv.org/schemas/atom',
 }
 
+def _setup_proxy():
+    """配置 HTTP/HTTPS 代理，用于国内访问 arXiv
+    
+    优先级：
+    1. 本文件顶部的 PROXY 字典（直接配置）
+    2. 环境变量 HTTP_PROXY / HTTPS_PROXY
+    
+    Returns:
+        urllib.request.ProxyHandler or None (如果未配置代理)
+    """
+    proxies = {}
+    
+    # 先检查代码中直接配置的代理
+    if PROXY.get("http") or PROXY.get("https"):
+        proxies["http"] = PROXY.get("http", "")
+        proxies["https"] = PROXY.get("https", PROXY.get("http", ""))
+    else:
+        # 否则检查环境变量
+        for env_var in ["HTTPS_PROXY", "https_proxy", "HTTP_PROXY", "http_proxy"]:
+            val = os.environ.get(env_var, "")
+            if val:
+                proxies["https" if "HTTPS" in env_var.upper() else "http"] = val
+    
+    if proxies:
+        # 清理空值
+        proxies = {k: v for k, v in proxies.items() if v}
+    
+    if proxies:
+        return urllib.request.ProxyHandler(proxies)
+    return None
+
 def _arxiv_request(url: str, max_retries: int = 5) -> str:
-    """发送 arXiv API 请求，处理限流和重试"""
+    """发送 arXiv API 请求，处理限流和重试（支持代理）"""
     last_error = None
+    
+    # 获取代理处理器（首次调用时配置，后续直接复用）
+    if not hasattr(_arxiv_request, '_proxy_handler'):
+        _arxiv_request._proxy_handler = _setup_proxy()
+        if _arxiv_request._proxy_handler:
+            print(f"     🌐 已启用代理: {PROXY}")
+    
     for attempt in range(max_retries):
         try:
             req = urllib.request.Request(
                 url,
                 headers={'User-Agent': 'ResearchHub/1.0 (mailto:research@example.com)'}
             )
-            with urllib.request.urlopen(req, timeout=30) as resp:
+            
+            # 使用代理（如果已配置）
+            if _arxiv_request._proxy_handler:
+                opener = urllib.request.build_opener(_arxiv_request._proxy_handler)
+                resp = opener.open(req, timeout=30)
+            else:
+                resp = urllib.request.urlopen(req, timeout=30)
+            
+            with resp:
                 # 检查限流头
                 remaining = resp.headers.get('X-RateLimit-Remaining', 'unknown')
                 retry_after = resp.headers.get('Retry-After', '0')

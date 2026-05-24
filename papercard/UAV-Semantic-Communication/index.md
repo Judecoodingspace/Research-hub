@@ -16,3 +16,6 @@
 - Han 2026 是当前语义通信方向中与“多 UAV 任务导向通信”高度贴近的核心前置文献。
 - 它的主要贡献在于把多 UAV 协同通信从“全量上传”推进到“任务 query 驱动的语义源选择”。
 - 它的主要不足是仍采用固定轨迹和单模态 RGB 图像分割，未覆盖异构算力、动态切分、路径规划与协同推理闭环。
+
+| 2025 | Zefu Lin; Wenbo Chen; Xiaojuan Jin; Yu-Ren Yang; L... | [MCOP: Multi-UAV Collaborative Occupancy Prediction...](2025_Lin_MCOP_Multi-UAV_Collaborative_Occupancy_Prediction.md) | MEDIUM | 2026-05-24 |
+|  | Haotai Zhao; Jie Ruan; Xinyao Zhang; Miao Liu; Jie... | [FLASH: A Joint Optimization Framework of Splitting, Pairing,...](_Zhao_FLASH_A_Joint_Optimization_Framework_of_Splitting,_Pairing,_.md) | MEDIUM | 2026-05-24 |

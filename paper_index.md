@@ -44,7 +44,7 @@
 - `papercard/UAV-Task-Oriented-Communication/2025_Hu_Resource_Allocation_Multi_Modal_Semantic_Comm_UAV.md`
 
 ## 高重合度冲击评估
-- Han 2026 MC-DSA | 高重合度文献 | 已生成冲击评估 | `compare/UAV-High-Overlap-Impact/20260508_han_mc_dsa_impact_on_my_idea.md`
+- Han 2026 MC-DSA | 高重合度文献 | 已有 4 篇 paper card (含自动生成) | `compare/UAV-High-Overlap-Impact/20260508_han_mc_dsa_impact_on_my_idea.md`
 
 ## arxiv_daily 本轮新增
 - `papercard/arxiv_daily/2026_Hu_Multi_UAV_Tracking_Handover.md`

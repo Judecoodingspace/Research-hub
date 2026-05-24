@@ -1,0 +1,450 @@
+[
+  {
+    "title": "Cross-View Splatter: Feed-Forward View Synthesis with Georeferenced Images",
+    "summary": "We present Cross-View Splatter, a feed-forward method that predicts pixel-aligned Gaussian splats for outdoor scenes captured at ground level AND by satellite. Faithful reconstructions require good camera coverage, but ground imagery is time-consuming and hard to capture at scale for large outdoor scenes. Fortunately, satellite imagery can provide a global geometric prior that is easy to access via public APIs. Cross-View Splatter fuses orthorectified satellite views with GPS-tagged ground photo",
+    "arxiv_id": "2605.19656v1",
+    "published": "2026-05-19",
+    "authors": "Matias Turkulainen; Akshay Krishnan; Filippo Aleotti; Mohamed Sayed; Guillermo Garcia-Hernando"
+  },
+  {
+    "title": "View-Aware Semantic Alignment for Aerial-Ground Person Re-Identification",
+    "summary": "Aerial-Ground Person Re-Identification (AGPReID) remains highly challenging due to drastic viewpoint variations between drones and fixed cameras. Existing methods typically follow a view-invariant paradigm, aligning shared features across views to achieve robustness. However, view-invariant inherently enforces part-level alignment, which ignores view-specific cues and discriminative identity information. To this end, this work proposes ViSA (View-aware Semantic Alignment), a view-aware framework",
+    "arxiv_id": "2605.18192v1",
+    "published": "2026-05-18",
+    "authors": "Quan Zhang; Zeqiang Cai; Peiming Zhao; Jingze Wu; Cailun Wu"
+  },
+  {
+    "title": "Satellite-Free Training for Drone-View Geo-Localization",
+    "summary": "Drone-view geo-localization (DVGL) aims to determine the location of drones in GPS-denied environments by retrieving the corresponding geotagged satellite tile from a reference gallery given UAV observations of a location. In many existing formulations, these observations are represented by a single oblique UAV image. In contrast, our satellite-free setting is designed for multi-view UAV sequences, which are used to construct a geometry-normalized UAV-side location representation before cross-vi",
+    "arxiv_id": "2604.01581v2",
+    "published": "2026-04-02",
+    "authors": "Tao Liu; Yingzhi Zhang; Kan Ren; Xiaoqi Zhao"
+  },
+  {
+    "title": "Fusion of Cellular ISAC and Passive RF Sensing for UAV Detection and Tracking",
+    "summary": "The rapid growth of unmanned aerial vehicles (UAVs) in civilian and critical-infrastructure airspace has created a need for reliable detection and tracking systems that operate under diverse environmental and sensing conditions. This paper presents a UAV detection and tracking system that fuses measurements from a network of passive Keysight N6841A RF sensors and a Ku-band Fortem TrueView R20 radar operating in the FR3 spectrum (16.3 GHz) as an ISAC proxy. Real-world experiments at the NSF AERPA",
+    "arxiv_id": "2512.14608v1",
+    "published": "2025-12-16",
+    "authors": "Cole Dickerson; Sean Kearney; Sultan Manjur; Ismail Guvenc; Sevgi Gurbuz"
+  },
+  {
+    "title": "3D-Aware Multi-Task Learning with Cross-View Correlations for Dense Scene Understanding",
+    "summary": "This paper addresses the challenge of training a single network to jointly perform multiple dense prediction tasks, such as segmentation and depth estimation, i.e., multi-task learning (MTL). Current approaches mainly capture cross-task relations in the 2D image space, often leading to unstructured features lacking 3D-awareness. We argue that 3D-awareness is vital for modeling cross-task correlations essential for comprehensive scene understanding. We propose to address this problem by integrati",
+    "arxiv_id": "2511.20646v1",
+    "published": "2025-11-25",
+    "authors": "Xiaoye Wang; Chen Tang; Xiangyu Yue; Wei-Hong Li"
+  },
+  {
+    "title": "AirCopBench: A Benchmark for Multi-drone Collaborative Embodied Perception and Reasoning",
+    "summary": "Multimodal Large Language Models (MLLMs) have shown promise in single-agent vision tasks, yet benchmarks for evaluating multi-agent collaborative perception remain scarce. This gap is critical, as multi-drone systems provide enhanced coverage, robustness, and collaboration compared to single-sensor setups. Existing multi-image benchmarks mainly target basic perception tasks using high-quality single-agent images, thus failing to evaluate MLLMs in more complex, egocentric collaborative scenarios,",
+    "arxiv_id": "2511.11025v2",
+    "published": "2025-11-14",
+    "authors": "Jirong Zha; Yuxuan Fan; Tianyu Zhang; Geng Chen; Yingfeng Chen"
+  },
+  {
+    "title": "A Multi-Drone Multi-View Dataset and Deep Learning Framework for Pedestrian Detection and Tracking",
+    "summary": "Multi-drone surveillance systems offer enhanced coverage and robustness for pedestrian tracking, yet existing approaches struggle with dynamic camera positions and complex occlusions. This paper introduces MATRIX (Multi-Aerial TRacking In compleX environments), a comprehensive dataset featuring synchronized footage from eight drones with continuously changing positions, and a novel deep learning framework for multi-view detection and tracking. Unlike existing datasets that rely on static cameras",
+    "arxiv_id": "2511.08615v1",
+    "published": "2025-11-06",
+    "authors": "Kosta Dakic; Kanchana Thilakarathna; Rodrigo N. Calheiros; Teng Joon Lim"
+  },
+  {
+    "title": "Cooperative Perception: A Resource-Efficient Framework for Multi-Drone 3D Scene Reconstruction Using Federated Diffusion and NeRF",
+    "summary": "The proposal introduces an innovative drone swarm perception system that aims to solve problems related to computational limitations and low-bandwidth communication, and real-time scene reconstruction. The framework enables efficient multi-agent 3D/4D scene synthesis through federated learning of shared diffusion model and YOLOv12 lightweight semantic extraction and local NeRF updates while maintaining privacy and scalability. The framework redesigns generative diffusion models for joint scene r",
+    "arxiv_id": "2508.00967v1",
+    "published": "2025-08-01",
+    "authors": "Massoud Pourmandi"
+  },
+  {
+    "title": "Multi-Flow: Multi-View-Enriched Normalizing Flows for Industrial Anomaly Detection",
+    "summary": "With more well-performing anomaly detection methods proposed, many of the single-view tasks have been solved to a relatively good degree. However, real-world production scenarios often involve complex industrial products, whose properties may not be fully captured by one single image. While normalizing flow based approaches already work well in single-camera scenarios, they currently do not make use of the priors in multi-view data. We aim to bridge this gap by using these flow-based models as a",
+    "arxiv_id": "2504.03306v1",
+    "published": "2025-04-04",
+    "authors": "Mathis Kruse; Bodo Rosenhahn"
+  },
+  {
+    "title": "Multi-View Industrial Anomaly Detection with Epipolar Constrained Cross-View Fusion",
+    "summary": "Multi-camera systems provide richer contextual information for industrial anomaly detection. However, traditional methods process each view independently, disregarding the complementary information across viewpoints. Existing multi-view anomaly detection approaches typically employ data-driven cross-view attention for feature fusion but fail to leverage the unique geometric properties of multi-camera setups. In this work, we introduce an epipolar geometry-constrained attention module to guide cr",
+    "arxiv_id": "2503.11088v1",
+    "published": "2025-03-14",
+    "authors": "Yifan Liu; Xun Xu; Shijie Li; Jingyi Liao; Xulei Yang"
+  },
+  {
+    "title": "Exploiting Ensemble Learning for Cross-View Isolated Sign Language Recognition",
+    "summary": "In this paper, we present our solution to the Cross-View Isolated Sign Language Recognition (CV-ISLR) challenge held at WWW 2025. CV-ISLR addresses a critical issue in traditional Isolated Sign Language Recognition (ISLR), where existing datasets predominantly capture sign language videos from a frontal perspective, while real-world camera angles often vary. To accurately recognize sign language from different viewpoints, models must be capable of understanding gestures from multiple angles, mak",
+    "arxiv_id": "2502.02196v1",
+    "published": "2025-02-04",
+    "authors": "Fei Wang; Kun Li; Yiqi Nie; Zhangling Duan; Peng Zou"
+  },
+  {
+    "title": "Fact-Level Confidence Calibration and Self-Correction",
+    "summary": "Confidence calibration in LLMs, i.e., aligning their self-assessed confidence with the actual accuracy of their responses, enabling them to self-evaluate the correctness of their outputs. However, current calibration methods for LLMs typically estimate two scalars to represent overall response confidence and correctness, which is inadequate for long-form generation where the response includes multiple atomic facts and may be partially confident and correct. These methods also overlook the releva",
+    "arxiv_id": "2411.13343v1",
+    "published": "2024-11-20",
+    "authors": "Yige Yuan; Bingbing Xu; Hexiang Tan; Fei Sun; Teng Xiao"
+  },
+  {
+    "title": "Confidence Calibration of Classifiers with Many Classes",
+    "summary": "For classification models based on neural networks, the maximum predicted class probability is often used as a confidence score. This score rarely predicts well the probability of making a correct prediction and requires a post-processing calibration step. However, many confidence calibration methods fail for problems with many classes. To address this issue, we transform the problem of calibrating a multiclass classifier into calibrating a single surrogate binary classifier. This approach allow",
+    "arxiv_id": "2411.02988v2",
+    "published": "2024-11-05",
+    "authors": "Adrien LeCoz; Stéphane Herbin; Faouzi Adjed"
+  },
+  {
+    "title": "Real-time Stereo-based 3D Object Detection for Streaming Perception",
+    "summary": "The ability to promptly respond to environmental changes is crucial for the perception system of autonomous driving. Recently, a new task called streaming perception was proposed. It jointly evaluate the latency and accuracy into a single metric for video online perception. In this work, we introduce StreamDSGN, the first real-time stereo-based 3D object detection framework designed for streaming perception. StreamDSGN is an end-to-end framework that directly predicts the 3D properties of object",
+    "arxiv_id": "2410.12394v1",
+    "published": "2024-10-16",
+    "authors": "Changcai Li; Zonghua Gu; Gang Chen; Libo Huang; Wei Zhang"
+  },
+  {
+    "title": "Underwater Camouflaged Object Tracking Meets Vision-Language SAM2",
+    "summary": "Over the past decade, significant progress has been made in visual object tracking, largely due to the availability of large-scale datasets. However, these datasets have primarily focused on open-air scenarios and have largely overlooked underwater animal tracking-especially the complex challenges posed by camouflaged marine animals. To bridge this gap, we take a step forward by proposing the first large-scale multi-modal underwater camouflaged object tracking dataset, namely UW-COT220. Based on",
+    "arxiv_id": "2409.16902v5",
+    "published": "2024-09-25",
+    "authors": "Chunhui Zhang; Li Liu; Guanjie Huang; Zhipeng Zhang; Hao Wen"
+  },
+  {
+    "title": "HOLA-Drone: Hypergraphic Open-ended Learning for Zero-Shot Multi-Drone Cooperative Pursuit",
+    "summary": "Zero-shot coordination (ZSC) is a significant challenge in multi-agent collaboration, aiming to develop agents that can coordinate with unseen partners they have not encountered before. Recent cutting-edge ZSC methods have primarily focused on two-player video games such as OverCooked!2 and Hanabi. In this paper, we extend the scope of ZSC research to the multi-drone cooperative pursuit scenario, exploring how to construct a drone agent capable of coordinating with multiple unseen partners to ca",
+    "arxiv_id": "2409.08767v2",
+    "published": "2024-09-13",
+    "authors": "Yang Li; Dengyu Zhang; Junfan Chen; Ying Wen; Qingrui Zhang"
+  },
+  {
+    "title": "PVAFN: Point-Voxel Attention Fusion Network with Multi-Pooling Enhancing for 3D Object Detection",
+    "summary": "The integration of point and voxel representations is becoming more common in LiDAR-based 3D object detection. However, this combination often struggles with capturing semantic information effectively. Moreover, relying solely on point features within regions of interest can lead to information loss and limitations in local feature representation. To tackle these challenges, we propose a novel two-stage 3D object detector, called Point-Voxel Attention Fusion Network (PVAFN). PVAFN leverages an a",
+    "arxiv_id": "2408.14600v1",
+    "published": "2024-08-26",
+    "authors": "Yidi Li; Jiahao Wen; Bin Ren; Wenhao Li; Zhenhuan Xu"
+  },
+  {
+    "title": "eMoE-Tracker: Environmental MoE-based Transformer for Robust Event-guided Object Tracking",
+    "summary": "The unique complementarity of frame-based and event cameras for high frame rate object tracking has recently inspired some research attempts to develop multi-modal fusion approaches. However, these methods directly fuse both modalities and thus ignore the environmental attributes, e.g., motion blur, illumination variance, occlusion, scale variation, etc. Meanwhile, insufficient interaction between search and template features makes distinguishing target objects and backgrounds difficult. As a re",
+    "arxiv_id": "2406.20024v3",
+    "published": "2024-06-28",
+    "authors": "Yucheng Chen; Lin Wang"
+  },
+  {
+    "title": "Drones Help Drones: A Collaborative Framework for Multi-Drone Object Trajectory Prediction and Beyond",
+    "summary": "Collaborative trajectory prediction can comprehensively forecast the future motion of objects through multi-view complementary information. However, it encounters two main challenges in multi-drone collaboration settings. The expansive aerial observations make it difficult to generate precise Bird's Eye View (BEV) representations. Besides, excessive interactions can not meet real-time prediction requirements within the constrained drone-based communication bandwidth. To address these problems, w",
+    "arxiv_id": "2405.14674v1",
+    "published": "2024-05-23",
+    "authors": "Zhechao Wang; Peirui Cheng; Mingxin Chen; Pengju Tian; Zhirui Wang"
+  },
+  {
+    "title": "Awesome Multi-modal Object Tracking",
+    "summary": "Multi-modal object tracking (MMOT) is an emerging field that combines data from various modalities, \\eg vision (RGB), depth, thermal infrared, event, language and audio, to estimate the state of an arbitrary object in a video sequence. It is of great significance for many applications such as autonomous driving and intelligent surveillance. In recent years, MMOT has received more and more attention. However, existing MMOT algorithms mainly focus on two modalities (\\eg RGB+depth, RGB+thermal infr",
+    "arxiv_id": "2405.14200v2",
+    "published": "2024-05-23",
+    "authors": "Chunhui Zhang; Li Liu; Hao Wen; Xi Zhou; Yanfeng Wang"
+  },
+  {
+    "title": "View-Centric Multi-Object Tracking with Homographic Matching in Moving UAV",
+    "summary": "In this paper, we address the challenge of Multi-Object Tracking (MOT) in moving Unmanned Aerial Vehicle (UAV) scenarios, where irregular flight trajectories, such as hovering, turning left/right, and moving up/down, lead to significantly greater complexity compared to fixed-camera MOT. Specifically, changes in the scene background not only render traditional frame-to-frame object IoU association methods ineffective but also introduce significant view shifts in the objects, which complicates tra",
+    "arxiv_id": "2403.10830v3",
+    "published": "2024-03-16",
+    "authors": "Deyi Ji; Lanyun Zhu; Siqi Gao; Qi Zhu; Yiru Zhao"
+  },
+  {
+    "title": "Improving the Detection of Small Oriented Objects in Aerial Images",
+    "summary": "Small oriented objects that represent tiny pixel-area in large-scale aerial images are difficult to detect due to their size and orientation. Existing oriented aerial detectors have shown promising results but are mainly focused on orientation modeling with less regard to the size of the objects. In this work, we proposed a method to accurately detect small oriented objects in aerial images by enhancing the classification and regression tasks of the oriented object detection model. We designed t",
+    "arxiv_id": "2401.06503v1",
+    "published": "2024-01-12",
+    "authors": "Chandler Timm C. Doloriel; Rhandley D. Cajote"
+  },
+  {
+    "title": "Sea You Later: Metadata-Guided Long-Term Re-Identification for UAV-Based Multi-Object Tracking",
+    "summary": "Re-identification (ReID) in multi-object tracking (MOT) for UAVs in maritime computer vision has been challenging for several reasons. More specifically, short-term re-identification (ReID) is difficult due to the nature of the characteristics of small targets and the sudden movement of the drone's gimbal. Long-term ReID suffers from the lack of useful appearance diversity. In response to these challenges, we present an adaptable motion-based MOT algorithm, called Metadata Guided MOT (MG-MOT). T",
+    "arxiv_id": "2311.03561v2",
+    "published": "2023-11-06",
+    "authors": "Cheng-Yen Yang; Hsiang-Wei Huang; Zhongyu Jiang; Heng-Cheng Kuo; Jie Mei"
+  },
+  {
+    "title": "Practical Collaborative Perception: A Framework for Asynchronous and Multi-Agent 3D Object Detection",
+    "summary": "Occlusion is a major challenge for LiDAR-based object detection methods. This challenge becomes safety-critical in urban traffic where the ego vehicle must have reliable object detection to avoid collision while its field of view is severely reduced due to the obstruction posed by a large number of road users. Collaborative perception via Vehicle-to-Everything (V2X) communication, which leverages the diverse perspective thanks to the presence at multiple locations of connected agents to form a c",
+    "arxiv_id": "2307.01462v3",
+    "published": "2023-07-04",
+    "authors": "Minh-Quan Dao; Julie Stephany Berrio; Vincent Frémont; Mao Shan; Elwan Héry"
+  },
+  {
+    "title": "Oriented object detection in optical remote sensing images using deep learning: a survey",
+    "summary": "Oriented object detection is a fundamental yet challenging task in remote sensing (RS), aiming to locate and classify objects with arbitrary orientations. Recent advancements in deep learning have significantly enhanced the capabilities of oriented object detection methods. Given the rapid development of this field, a comprehensive survey of the recent advances in oriented object detection is presented in this paper. Specifically, we begin by tracing the technical evolution from horizontal objec",
+    "arxiv_id": "2302.10473v6",
+    "published": "2023-02-21",
+    "authors": "Kun Wang; Zi Wang; Zhang Li; Ang Su; Xichao Teng"
+  },
+  {
+    "title": "Uncertainty Calibration and its Application to Object Detection",
+    "summary": "Image-based environment perception is an important component especially for driver assistance systems or autonomous driving. In this scope, modern neuronal networks are used to identify multiple objects as well as the according position and size information within a single frame. The performance of such an object detection model is important for the overall performance of the whole system. However, a detection model might also predict these objects under a certain degree of uncertainty. [...]\n  ",
+    "arxiv_id": "2302.02622v1",
+    "published": "2023-02-06",
+    "authors": "Fabian Küppers"
+  },
+  {
+    "title": "Collaborative Perception in Autonomous Driving: Methods, Datasets and Challenges",
+    "summary": "Collaborative perception is essential to address occlusion and sensor failure issues in autonomous driving. In recent years, theoretical and experimental investigations of novel works for collaborative perception have increased tremendously. So far, however, few reviews have focused on systematical collaboration modules and large-scale collaborative perception datasets. This work reviews recent achievements in this field to bridge this gap and motivate future research. We start with a brief over",
+    "arxiv_id": "2301.06262v4",
+    "published": "2023-01-16",
+    "authors": "Yushan Han; Hui Zhang; Huifang Li; Yi Jin; Congyan Lang"
+  },
+  {
+    "title": "OA-DET3D: Embedding Object Awareness as a General Plug-in for Multi-Camera 3D Object Detection",
+    "summary": "The recent advance in multi-camera 3D object detection is featured by bird's-eye view (BEV) representation or object queries. However, the ill-posed transformation from image-plane view to 3D space inevitably causes feature clutter and distortion, making the objects blur into the background. To this end, we explore how to incorporate supplementary cues for differentiating objects in the transformed feature representation. Formally, we introduce OA-DET3D, a general plug-in module that improves 3D",
+    "arxiv_id": "2301.05711v3",
+    "published": "2023-01-13",
+    "authors": "Xiaomeng Chu; Jiajun Deng; Jianmin Ji; Yu Zhang; Houqiang Li"
+  },
+  {
+    "title": "Super Sparse 3D Object Detection",
+    "summary": "As the perception range of LiDAR expands, LiDAR-based 3D object detection contributes ever-increasingly to the long-range perception in autonomous driving. Mainstream 3D object detectors often build dense feature maps, where the cost is quadratic to the perception range, making them hardly scale up to the long-range settings. To enable efficient long-range detection, we first propose a fully sparse object detector termed FSD. FSD is built upon the general sparse voxel encoder and a novel sparse ",
+    "arxiv_id": "2301.02562v1",
+    "published": "2023-01-05",
+    "authors": "Lue Fan; Yuxue Yang; Feng Wang; Naiyan Wang; Zhaoxiang Zhang"
+  },
+  {
+    "title": "Poisson multi-Bernoulli mixture filter with general target-generated measurements and arbitrary clutter",
+    "summary": "This paper shows that the Poisson multi-Bernoulli mixture (PMBM) density is a multi-target conjugate prior for general target-generated measurement distributions and arbitrary clutter distributions. That is, for this multi-target measurement model and the standard multi-target dynamic model with Poisson birth model, the predicted and filtering densities are PMBMs. We derive the corresponding PMBM filtering recursion. Based on this result, we implement a PMBM filter for point-target measurement m",
+    "arxiv_id": "2210.12983v2",
+    "published": "2022-10-24",
+    "authors": "Ángel F. García-Fernández; Yuxuan Xia; Lennart Svensson"
+  },
+  {
+    "title": "BC-IoDT: Blockchain-based Framework for Authentication in Internet of Drone Things",
+    "summary": "We leverage blockchain technology for drone node authentication in internet of drone things (IoDT). During the authentication procedure, the credentials of drone nodes are examined to remove malicious nodes from the system. In IoDT, drones are responsible for gathering data and transmitting it to cluster heads (CHs) for further processing. The CH collects and organizes data. Due to computational load, their energy levels rapidly deplete. To overcome this problem, we present a low-energy adaptive",
+    "arxiv_id": "2210.11745v1",
+    "published": "2022-10-21",
+    "authors": "Junaid Akram; Awais Akram; Rutvij H. Jhaveri; Mamoun Alazab; Haoran Chi"
+  },
+  {
+    "title": "Parametric and Multivariate Uncertainty Calibration for Regression and Object Detection",
+    "summary": "Reliable spatial uncertainty evaluation of object detection models is of special interest and has been subject of recent work. In this work, we review the existing definitions for uncertainty calibration of probabilistic regression tasks. We inspect the calibration properties of common detection networks and extend state-of-the-art recalibration methods. Our methods use a Gaussian process (GP) recalibration scheme that yields parametric distributions as output (e.g. Gaussian or Cauchy). The usag",
+    "arxiv_id": "2207.01242v2",
+    "published": "2022-07-04",
+    "authors": "Fabian Küppers; Jonas Schneider; Anselm Haselhoff"
+  },
+  {
+    "title": "Confidence Calibration for Object Detection and Segmentation",
+    "summary": "Calibrated confidence estimates obtained from neural networks are crucial, particularly for safety-critical applications such as autonomous driving or medical image diagnosis. However, although the task of confidence calibration has been investigated on classification problems, thorough investigations on object detection and segmentation problems are still missing. Therefore, we focus on the investigation of confidence calibration for object detection and segmentation models in this chapter. We ",
+    "arxiv_id": "2202.12785v4",
+    "published": "2022-02-25",
+    "authors": "Fabian Küppers; Anselm Haselhoff; Jan Kronenberger; Jonas Schneider"
+  },
+  {
+    "title": "Advanced Drone Swarm Security by Using Blockchain Governance Game",
+    "summary": "This research contributes to the security design of an advanced smart drone swarm network based on a variant of the Blockchain Governance Game (BGG), which is the theoretical game model to predict the moments of security actions before attacks, and the Strategic Alliance for Blockchain Governance Game (SABGG), which is one of the BGG variants which has been adapted to construct the best strategies to take preliminary actions based on strategic alliance for protecting smart drones in a blockchain",
+    "arxiv_id": "2112.15454v4",
+    "published": "2021-12-29",
+    "authors": "Song-Kyoo Kim"
+  },
+  {
+    "title": "BEVDet: High-performance Multi-camera 3D Object Detection in Bird-Eye-View",
+    "summary": "Autonomous driving perceives its surroundings for decision making, which is one of the most complex scenarios in visual perception. The success of paradigm innovation in solving the 2D object detection task inspires us to seek an elegant, feasible, and scalable paradigm for fundamentally pushing the performance boundary in this area. To this end, we contribute the BEVDet paradigm in this paper. BEVDet performs 3D object detection in Bird-Eye-View (BEV), where most target values are defined and r",
+    "arxiv_id": "2112.11790v3",
+    "published": "2021-12-22",
+    "authors": "Junjie Huang; Guan Huang; Zheng Zhu; Yun Ye; Dalong Du"
+  },
+  {
+    "title": "Stronger Baseline for Person Re-Identification",
+    "summary": "Person re-identification (re-ID) aims to identify the same person of interest across non-overlapping capturing cameras, which plays an important role in visual surveillance applications and computer vision research areas. Fitting a robust appearance-based representation extractor with limited collected training data is crucial for person re-ID due to the high expanse of annotating the identity of unlabeled data. In this work, we propose a Stronger Baseline for person re-ID, an enhancement versio",
+    "arxiv_id": "2112.01059v1",
+    "published": "2021-12-02",
+    "authors": "Fengliang Qi; Bo Yan; Leilei Cao; Hongbin Wang"
+  },
+  {
+    "title": "A Survey of Self-Supervised and Few-Shot Object Detection",
+    "summary": "Labeling data is often expensive and time-consuming, especially for tasks such as object detection and instance segmentation, which require dense labeling of the image. While few-shot object detection is about training a model on novel (unseen) object classes with little data, it still requires prior training on many labeled examples of base (seen) classes. On the other hand, self-supervised methods aim at learning representations from unlabeled data which transfer well to downstream tasks such ",
+    "arxiv_id": "2110.14711v3",
+    "published": "2021-10-27",
+    "authors": "Gabriel Huang; Issam Laradji; David Vazquez; Simon Lacoste-Julien; Pau Rodriguez"
+  },
+  {
+    "title": "An Open Natural Language Processing Development Framework for EHR-based Clinical Research: A case demonstration using the National COVID Cohort Collaborative (N3C)",
+    "summary": "While we pay attention to the latest advances in clinical natural language processing (NLP), we can notice some resistance in the clinical and translational research community to adopt NLP models due to limited transparency, interpretability, and usability. In this study, we proposed an open natural language processing development framework. We evaluated it through the implementation of NLP algorithms for the National COVID Cohort Collaborative (N3C). Based on the interests in information extrac",
+    "arxiv_id": "2110.10780v3",
+    "published": "2021-10-20",
+    "authors": "Sijia Liu; Andrew Wen; Liwei Wang; Huan He; Sunyang Fu"
+  },
+  {
+    "title": "Exploring Depth Contribution for Camouflaged Object Detection",
+    "summary": "Camouflaged object detection (COD) aims to segment camouflaged objects hiding in the environment, which is challenging due to the similar appearance of camouflaged objects and their surroundings. Research in biology suggests depth can provide useful object localization cues for camouflaged object discovery. In this paper, we study the depth contribution for camouflaged object detection, where the depth maps are generated with existing monocular depth estimation (MDE) methods. Due to the domain g",
+    "arxiv_id": "2106.13217v3",
+    "published": "2021-06-24",
+    "authors": "Mochu Xiang; Jing Zhang; Yunqiu Lv; Aixuan Li; Yiran Zhong"
+  },
+  {
+    "title": "EmergencyNet: Efficient Aerial Image Classification for Drone-Based Emergency Monitoring Using Atrous Convolutional Feature Fusion",
+    "summary": "Deep learning-based algorithms can provide state-of-the-art accuracy for remote sensing technologies such as unmanned aerial vehicles (UAVs)/drones, potentially enhancing their remote sensing capabilities for many emergency response and disaster management applications. In particular, UAVs equipped with camera sensors can operating in remote and difficult to access disaster-stricken areas, analyze the image and alert in the presence of various calamities such as collapsed buildings, flood, or fi",
+    "arxiv_id": "2104.14006v1",
+    "published": "2021-04-28",
+    "authors": "Christos Kyrkou; Theocharis Theocharides"
+  },
+  {
+    "title": "Latent-Space Inpainting for Packet Loss Concealment in Collaborative Object Detection",
+    "summary": "Edge devices, such as cameras and mobile units, are increasingly capable of performing sophisticated computation in addition to their traditional roles in sensing and communicating signals. The focus of this paper is on collaborative object detection, where deep features computed on the edge device from input images are transmitted to the cloud for further processing. We consider the impact of packet loss on the transmitted features and examine several ways for recovering the missing data. In pa",
+    "arxiv_id": "2102.00142v1",
+    "published": "2021-01-30",
+    "authors": "Ivan V. Bajić"
+  },
+  {
+    "title": "TJU-DHD: A Diverse High-Resolution Dataset for Object Detection",
+    "summary": "Vehicles, pedestrians, and riders are the most important and interesting objects for the perception modules of self-driving vehicles and video surveillance. However, the state-of-the-art performance of detecting such important objects (esp. small objects) is far from satisfying the demand of practical systems. Large-scale, rich-diversity, and high-resolution datasets play an important role in developing better object detection methods to satisfy the demand. Existing public large-scale datasets s",
+    "arxiv_id": "2011.09170v1",
+    "published": "2020-11-18",
+    "authors": "Yanwei Pang; Jiale Cao; Yazhao Li; Jin Xie; Hanqing Sun"
+  },
+  {
+    "title": "False Detection (Positives and Negatives) in Object Detection",
+    "summary": "Object detection is a very important function of visual perception systems. Since the early days of classical object detection based on HOG to modern deep learning based detectors, object detection has improved in accuracy. Two stage detectors usually have higher accuracy than single stage ones. Both types of detectors use some form of quantization of the search space of rectangular regions of image. There are far more of the quantized elements than true objects. The way these bounding boxes are",
+    "arxiv_id": "2008.06986v1",
+    "published": "2020-08-16",
+    "authors": "Subrata Goswami"
+  },
+  {
+    "title": "IA-MOT: Instance-Aware Multi-Object Tracking with Motion Consistency",
+    "summary": "Multiple object tracking (MOT) is a crucial task in computer vision society. However, most tracking-by-detection MOT methods, with available detected bounding boxes, cannot effectively handle static, slow-moving and fast-moving camera scenarios simultaneously due to ego-motion and frequent occlusion. In this work, we propose a novel tracking framework, called \"instance-aware MOT\" (IA-MOT), that can track multiple objects in either static or moving cameras by jointly considering the instance-leve",
+    "arxiv_id": "2006.13458v1",
+    "published": "2020-06-24",
+    "authors": "Jiarui Cai; Yizhou Wang; Haotian Zhang; Hung-Min Hsu; Chengqian Ma"
+  },
+  {
+    "title": "Quasi-Dense Similarity Learning for Multiple Object Tracking",
+    "summary": "Similarity learning has been recognized as a crucial step for object tracking. However, existing multiple object tracking methods only use sparse ground truth matching as the training objective, while ignoring the majority of the informative regions on the images. In this paper, we present Quasi-Dense Similarity Learning, which densely samples hundreds of region proposals on a pair of images for contrastive learning. We can directly combine this similarity learning with existing detection method",
+    "arxiv_id": "2006.06664v4",
+    "published": "2020-06-11",
+    "authors": "Jiangmiao Pang; Linlu Qiu; Xia Li; Haofeng Chen; Qi Li"
+  },
+  {
+    "title": "Multivariate Confidence Calibration for Object Detection",
+    "summary": "Unbiased confidence estimates of neural networks are crucial especially for safety-critical applications. Many methods have been developed to calibrate biased confidence estimates. Though there is a variety of methods for classification, the field of object detection has not been addressed yet. Therefore, we present a novel framework to measure and calibrate biased (or miscalibrated) confidence estimates of object detection methods. The main difference to related work in the field of classifier ",
+    "arxiv_id": "2004.13546v1",
+    "published": "2020-04-28",
+    "authors": "Fabian Küppers; Jan Kronenberger; Amirhossein Shantia; Anselm Haselhoff"
+  },
+  {
+    "title": "Intelligent Querying for Target Tracking in Camera Networks using Deep Q-Learning with n-Step Bootstrapping",
+    "summary": "Surveillance camera networks are a useful infrastructure for various visual analytics applications, where high-level inferences and predictions could be made based on target tracking across the network. Most multi-camera tracking works focus on target re-identification and trajectory association problems to track the target. However, since camera networks can generate enormous amount of video data, inefficient schemes for making re-identification or trajectory association queries can incur prohi",
+    "arxiv_id": "2004.09632v1",
+    "published": "2020-04-20",
+    "authors": "Anil Sharma; Saket Anand; Sanjit K. Kaul"
+  },
+  {
+    "title": "A Multi-Target Track-Before-Detect Particle Filter Using Superpositional Data in Non-Gaussian Noise",
+    "summary": "This paper proposes a novel particle filter for tracking time-varying states of multiple targets jointly from superpositional data, which depend on the sum of contributions of all targets. Many conventional tracking methods rely on preprocessing for detection (e.g., thresholding), which severely limits tracking performance at a low signal-to-noise ratio (SNR). In contrast, the proposed method operates directly on raw sensor signals without requiring such preprocessing. Though there also exist me",
+    "arxiv_id": "2003.05778v2",
+    "published": "2020-03-11",
+    "authors": "Nobutaka Ito; Simon Godsill"
+  },
+  {
+    "title": "Efficient ConvNet-based Object Detection for Unmanned Aerial Vehicles by Selective Tile Processing",
+    "summary": "Many applications utilizing Unmanned Aerial Vehicles (UAVs) require the use of computer vision algorithms to analyze the information captured from their on-board camera. Recent advances in deep learning have made it possible to use single-shot Convolutional Neural Network (CNN) detection algorithms that process the input image to detect various objects of interest. To keep the computational demands low these neural networks typically operate on small image sizes which, however, makes it difficul",
+    "arxiv_id": "1911.06073v1",
+    "published": "2019-11-14",
+    "authors": "George Plastiras; Christos Kyrkou; Theocharis Theocharides"
+  },
+  {
+    "title": "CullNet: Calibrated and Pose Aware Confidence Scores for Object Pose Estimation",
+    "summary": "We present a new approach for a single view, image-based object pose estimation. Specifically, the problem of culling false positives among several pose proposal estimates is addressed in this paper. Our proposed approach targets the problem of inaccurate confidence values predicted by CNNs which is used by many current methods to choose a final object pose prediction. We present a network called CullNet, solving this task. CullNet takes pairs of pose masks rendered from a 3D model and cropped r",
+    "arxiv_id": "1909.13476v1",
+    "published": "2019-09-30",
+    "authors": "Kartik Gupta; Lars Petersson; Richard Hartley"
+  },
+  {
+    "title": "Detection and Classification of UAVs Using RF Fingerprints in the Presence of Interference",
+    "summary": "This paper investigates the problem of detection and classification of unmanned aerial vehicles (UAVs) in the presence of wireless interference signals using a passive radio frequency (RF) surveillance system. The system uses a multistage detector to distinguish signals transmitted by a UAV controller from the background noise and interference signals. First, RF signals from any source are detected using a Markov models-based naïve Bayes decision mechanism. When the receiver operates at a signal",
+    "arxiv_id": "1909.05429v1",
+    "published": "2019-09-12",
+    "authors": "Martins Ezuma; Fatih Erden; Chethan Kumar Anjinappa; Ozgur Ozdemir; Ismail Guvenc"
+  },
+  {
+    "title": "Cascade R-CNN: High Quality Object Detection and Instance Segmentation",
+    "summary": "In object detection, the intersection over union (IoU) threshold is frequently used to define positives/negatives. The threshold used to train a detector defines its \\textit{quality}. While the commonly used threshold of 0.5 leads to noisy (low-quality) detections, detection performance frequently degrades for larger thresholds. This paradox of high-quality detection has two causes: 1) overfitting, due to vanishing positive samples for large thresholds, and 2) inference-time quality mismatch bet",
+    "arxiv_id": "1906.09756v1",
+    "published": "2019-06-24",
+    "authors": "Zhaowei Cai; Nuno Vasconcelos"
+  },
+  {
+    "title": "Deep Visual Re-Identification with Confidence",
+    "summary": "Transportation systems often rely on understanding the flow of vehicles or pedestrian. From traffic monitoring at the city scale, to commuters in train terminals, recent progress in sensing technology make it possible to use cameras to better understand the demand, i.e., better track moving agents (e.g., vehicles and pedestrians). Whether the cameras are mounted on drones, vehicles, or fixed in the built environments, they inevitably remain scatter. We need to develop the technology to re-identi",
+    "arxiv_id": "1906.04692v2",
+    "published": "2019-06-11",
+    "authors": "George Adaimi; Sven Kreiss; Alexandre Alahi"
+  },
+  {
+    "title": "RSS-Based Detection of Drones in the Presence of RF Interferers",
+    "summary": "Drones will have extensive use cases across various commercial, government, and military sectors, ranging from delivery of consumer goods to search and rescue operations. To maintain the safety and security of people and infrastructure, it becomes critically important to quickly and accurately detect non-cooperating drones. In this paper we formulate a received signal strength (RSS) based detector, leveraging the existing wireless infrastructures that might already be serving other devices. Thus",
+    "arxiv_id": "1905.03471v2",
+    "published": "2019-05-09",
+    "authors": "Priyanka Sinha; Yavuz Yapici; Ismail Guvenc; Esma Turgut; M. Cenk Gursoy"
+  },
+  {
+    "title": "Object Contour and Edge Detection with RefineContourNet",
+    "summary": "A ResNet-based multi-path refinement CNN is used for object contour detection. For this task, we prioritise the effective utilization of the high-level abstraction capability of a ResNet, which leads to state-of-the-art results for edge detection. Keeping our focus in mind, we fuse the high, mid and low-level features in that specific order, which differs from many other approaches. It uses the tensor with the highest-levelled features as the starting point to combine it layer-by-layer with feat",
+    "arxiv_id": "1904.13353v2",
+    "published": "2019-04-30",
+    "authors": "Andre Peter Kelm; Vijesh Soorya Rao; Udo Zoelzer"
+  },
+  {
+    "title": "Underlay Drone Cell for Temporary Events: Impact of Drone Height and Aerial Channel Environments",
+    "summary": "Providing seamless connection to a large number of devices is one of the biggest challenges for the Internet of Things (IoT) networks. Using a drone as an aerial base station (ABS) to provide coverage to devices or users on ground is envisaged as a promising solution for IoT networks. In this paper, we consider a communication network with an underlay ABS to provide coverage for a temporary event, such as a sporting event or a concert in a stadium. Using stochastic geometry, we propose a general",
+    "arxiv_id": "1809.06699v2",
+    "published": "2018-09-17",
+    "authors": "Xiaohui Zhou; Salman Durrani; Jing Guo; Halim Yanikomeroglu"
+  },
+  {
+    "title": "Improved Person Re-Identification Based on Saliency and Semantic Parsing with Deep Neural Network Models",
+    "summary": "Given a video or an image of a person acquired from a camera, person re-identification is the process of retrieving all instances of the same person from videos or images taken from a different camera with non-overlapping view. This task has applications in various fields, such as surveillance, forensics, robotics, multimedia. In this paper, we present a novel framework, named Saliency-Semantic Parsing Re-Identification (SSP-ReID), for taking advantage of the capabilities of both clues: saliency",
+    "arxiv_id": "1807.05618v1",
+    "published": "2018-07-15",
+    "authors": "Rodolfo Quispe; Helio Pedrini"
+  },
+  {
+    "title": "Learning View-Specific Deep Networks for Person Re-Identification",
+    "summary": "In recent years, a growing body of research has focused on the problem of person re-identification (re-id). The re-id techniques attempt to match the images of pedestrians from disjoint non-overlapping camera views. A major challenge of re-id is the serious intra-class variations caused by changing viewpoints. To overcome this challenge, we propose a deep neural network-based framework which utilizes the view information in the feature extraction stage. The proposed framework learns a view-speci",
+    "arxiv_id": "1803.11333v1",
+    "published": "2018-03-30",
+    "authors": "Zhanxiang Feng; Jianhuang Lai; Xiaohua Xie"
+  },
+  {
+    "title": "One-pass Person Re-identification by Sketch Online Discriminant Analysis",
+    "summary": "Person re-identification (re-id) is to match people across disjoint camera views in a multi-camera system, and re-id has been an important technology applied in smart city in recent years. However, the majority of existing person re-id methods are not designed for processing sequential data in an online way. This ignores the real-world scenario that person images detected from multi-cameras system are coming sequentially. While there is a few work on discussing online re-id, most of them require",
+    "arxiv_id": "1711.03368v1",
+    "published": "2017-11-09",
+    "authors": "Wei-Hong Li; Zhuowei Zhong; Wei-Shi Zheng"
+  },
+  {
+    "title": "Video Object Segmentation with Re-identification",
+    "summary": "Conventional video segmentation methods often rely on temporal continuity to propagate masks. Such an assumption suffers from issues like drifting and inability to handle large displacement. To overcome these issues, we formulate an effective mechanism to prevent the target from being lost via adaptive object re-identification. Specifically, our Video Object Segmentation with Re-identification (VS-ReID) model includes a mask propagation module and a ReID module. The former module produces an ini",
+    "arxiv_id": "1708.00197v1",
+    "published": "2017-08-01",
+    "authors": "Xiaoxiao Li; Yuankai Qi; Zhe Wang; Kai Chen; Ziwei Liu"
+  },
+  {
+    "title": "Using Deep Networks for Drone Detection",
+    "summary": "Drone detection is the problem of finding the smallest rectangle that encloses the drone(s) in a video sequence. In this study, we propose a solution using an end-to-end object detection model based on convolutional neural networks. To solve the scarce data problem for training the network, we propose an algorithm for creating an extensive artificial dataset by combining background-subtracted real images. With this approach, we can achieve precision and recall values both of which are high at th",
+    "arxiv_id": "1706.05726v1",
+    "published": "2017-06-18",
+    "authors": "Cemal Aker; Sinan Kalkan"
+  },
+  {
+    "title": "Performance Measures and a Data Set for Multi-Target, Multi-Camera Tracking",
+    "summary": "To help accelerate progress in multi-target, multi-camera tracking systems, we present (i) a new pair of precision-recall measures of performance that treats errors of all types uniformly and emphasizes correct identification over sources of error; (ii) the largest fully-annotated and calibrated data set to date with more than 2 million frames of 1080p, 60fps video taken by 8 cameras observing more than 2,700 identities over 85 minutes; and (iii) a reference software system as a comparison basel",
+    "arxiv_id": "1609.01775v2",
+    "published": "2016-09-06",
+    "authors": "Ergys Ristani; Francesco Solera; Roger S. Zou; Rita Cucchiara; Carlo Tomasi"
+  },
+  {
+    "title": "Person Re-identification for Real-world Surveillance Systems",
+    "summary": "Appearance based person re-identification in a real-world video surveillance system with non-overlapping camera views is a challenging problem for many reasons. Current state-of-the-art methods often address the problem by relying on supervised learning of similarity metrics or ranking functions to implicitly model appearance transformation between cameras for each camera pair, or group, in the system. This requires considerable human effort to annotate data. Furthermore, the learned models are ",
+    "arxiv_id": "1607.05975v1",
+    "published": "2016-07-20",
+    "authors": "Furqan M. Khan; Francois Bremond"
+  },
+  {
+    "title": "A Novel Visual Word Co-occurrence Model for Person Re-identification",
+    "summary": "Person re-identification aims to maintain the identity of an individual in diverse locations through different non-overlapping camera views. The problem is fundamentally challenging due to appearance variations resulting from differing poses, illumination and configurations of camera views. To deal with these difficulties, we propose a novel visual word co-occurrence model. We first map each pixel of an image to a visual word using a codebook, which is learned in an unsupervised manner. The appe",
+    "arxiv_id": "1410.6532v1",
+    "published": "2014-10-24",
+    "authors": "Ziming Zhang; Yuting Chen; Venkatesh Saligrama"
+  }
+]

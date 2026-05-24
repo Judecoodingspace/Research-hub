@@ -1,0 +1,3 @@
+
+| 2025 | Huabing Yan; Hualong Huang; Zijian Zhao; Zhi Wang;... | [Accuracy-Aware MLLM Task Offloading and Resource Allocation ...](2025_Yan_Accuracy-Aware_MLLM_Task_Offloading_and_Resource_Allocation_.md) | HIGH | 2026-05-24 |
+| 2025 | Y. Ji; Xinyue Du; Chu-ge Wu... | [A Hybrid Scheduling Approach for Optimizing UAV-Assisted Edg...](2025_Ji_A_Hybrid_Scheduling_Approach_for_Optimizing_UAV-Assisted_Edg.md) | MEDIUM | 2026-05-24 |
